@@ -20,7 +20,7 @@ namespace UB.Model
         public void LoadScripts()
         {
             InitializeChatSettings();
-
+            LoadDebugScripts();
             string folder = AppDomain.CurrentDomain.GetData("DataDirectory") + scriptsSubFolder;
             if( !Directory.Exists(folder))
             {
@@ -61,34 +61,12 @@ namespace UB.Model
                     //Is known script ?
                     if (scriptObject is IScript)
                     {
-                        var config = (scriptObject as IScript).OnConfigRequest();
+                        var script = scriptObject as IScript;
+
+                        var config = script.OnConfigRequest();
                         if( config is ChatConfig )
                         {
-                            var defaultConfig = config as ChatConfig;
-                            if (config != null)
-                            {
-                                if( !String.IsNullOrWhiteSpace( defaultConfig.ChatName ) )
-                                    if (defaultConfig.Parameters == null)
-                                        defaultConfig.Parameters = new List<ConfigField>();
-
-                                //Add default parameters
-                                defaultConfig.Parameters.AddRange(
-                                    new List<ConfigField>() {
-                                        new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "username" },
-                                        new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
-                                        new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "#blah, blah2" },
-                                        new ConfigField("Info1", "Enter Username and fill Channels to get readonly access", "Info", true, null),
-                                        new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
-                                        new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty }
-                                    });
-
-                                RefreshChatSettings(defaultConfig);
-                                SettingsRegistry.ChatFactory.Add(defaultConfig.ChatName, (chatConfig) =>
-                                            {
-                                                return (scriptObject as IScript).OnObjectRequest(chatConfig) as IChat;
-                                            });
-                                            
-                            }
+                            InitializeChatScript(config as ChatConfig, script);
                             Log.WriteInfo("Chat script loaded: {0}", scriptFileName);
                         }
                     }
@@ -98,6 +76,13 @@ namespace UB.Model
                     Log.WriteError("Script {0} load error {1}", scriptFileName, e.Message);
                 }
             }
+        }
+        private void LoadDebugScripts()
+        {
+            //var script = new Sc2TvScript();
+            //var config = script.OnConfigRequest();
+            //InitializeChatScript(config as ChatConfig, script);
+
         }
         private void RefreshChatSettings(ChatConfig defaultChatConfig)
         {
@@ -119,6 +104,34 @@ namespace UB.Model
                     }
                     savedConfig.Parameters.Add(parameter);
                 }
+            }
+        }
+        private void InitializeChatScript( ChatConfig config, IScript scriptObject )
+        {           
+            var defaultConfig = config as ChatConfig;
+            if (config != null)
+            {
+                if (!String.IsNullOrWhiteSpace(defaultConfig.ChatName))
+                    if (defaultConfig.Parameters == null)
+                        defaultConfig.Parameters = new List<ConfigField>();
+
+                //Add default parameters
+                defaultConfig.Parameters.AddRange(
+                    new List<ConfigField>() {
+                                    new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "username" },
+                                    new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                                    new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "#blah, blah2" },
+                                    new ConfigField("Info1", "Enter Username and fill Channels to get readonly access", "Info", true, null),
+                                    new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                                    new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty }
+                                });
+
+                RefreshChatSettings(defaultConfig);
+                SettingsRegistry.ChatFactory.Add(defaultConfig.ChatName, (chatConfig) =>
+                {
+                    return (scriptObject as IScript).OnObjectRequest(chatConfig) as IChat;
+                });
+
             }
         }
         private void InitializeChatSettings()

@@ -878,6 +878,9 @@
     <Content Include="Scripts\Example\Sc2Tv.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\Example\Sc2TvSmilesFallback.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\Put your scripts here.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1377,7 +1380,9 @@
       <FileType>Satellite</FileType>
     </PublishFile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\Debug\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cmd /c cd "$(TargetDir)"&gt;nul &amp; for /d %25%25d in (??,??-????) do if exist %25%25d rmdir /s /q %25%25d&gt;nul &amp; echo 0

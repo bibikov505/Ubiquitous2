@@ -201,6 +201,12 @@ namespace UB.ViewModel
                                                   if (Enabled)
                                                   {
                                                     IsLoaderVisible = true;
+                                                    if (chat == null || Status == null)
+                                                    {
+                                                        IsLoaderVisible = false;
+                                                        return;
+                                                    }
+
                                                     Status.ResetToDefault();
                                                     Status.IsConnected = false;
                                                     Status.IsLoggedIn = false;

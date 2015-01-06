@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using UB.Utils;
 
 namespace UB.Model
@@ -23,6 +24,15 @@ namespace UB.Model
                 return message;
             else
                 return result;
+        }
+        public static void RemoveBBCode( ChatMessage message, IChat chat)
+        {
+            string removeAnchors = @"\[\/*[^\]]*\]";
+            message.Text = Regex.Replace(message.Text, removeAnchors, "", RegexOptions.IgnoreCase);
+        }
+        public static void UnescapeHtml(ChatMessage message, IChat chat)
+        {
+            message.Text = HttpUtility.HtmlDecode(message.Text);
         }
         public static void ConvertToPlainText( ChatMessage message, IChat chat)
         {

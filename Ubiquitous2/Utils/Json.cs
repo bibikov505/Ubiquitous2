@@ -10,11 +10,31 @@ using UB.Model;
 
 namespace UB.Utils
 {
-    public class Json
+    public static class Json
     {
-        public static JArray ParseArray( string obj )
+        public static JArray Sort( JArray jsonArray, string property )
         {
-            return JArray.Parse(obj);
+            if (jsonArray == null || String.IsNullOrWhiteSpace(property))
+                return null;
+
+            var result = new JArray(jsonArray.OrderBy(x => x[property]));
+            return result;
+        }
+
+        public static JArray ParseArray( object obj )
+        {
+            if (obj is JArray)
+                return obj as JArray;
+
+            if (obj is string)
+            {
+                if (String.IsNullOrWhiteSpace(obj as string))
+                    return null;
+                else
+                    return JArray.Parse(obj as string);
+            }
+            else
+                return null;
         }
         public static void SerializeToStream<T>( T obj, Action<Stream> callback ) where T: class
         {

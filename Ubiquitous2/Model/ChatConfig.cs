@@ -105,6 +105,9 @@ namespace UB.Model
         }
         public object GetParameterValue(string name)
         {
+            if (Parameters == null || Parameters.Count == 0 || String.IsNullOrWhiteSpace(name))
+                return null;
+
             var searchParameter = Parameters.FirstOrDefault(parameter => parameter.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (searchParameter == null)
                 return null;

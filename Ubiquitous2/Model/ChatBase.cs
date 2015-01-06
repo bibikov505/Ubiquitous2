@@ -19,6 +19,8 @@ namespace UB.Model
         public ChatBase(ChatConfig config)
         {
             Config = config;
+            IconURL = config.IconURL;
+            ChatName = config.ChatName;
             ContentParsers = new List<Action<ChatMessage, IChat>>();     
             ChatChannels = new List<IChatChannel>();
             Emoticons = new List<Emoticon>();
