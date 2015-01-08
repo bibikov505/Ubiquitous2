@@ -118,10 +118,10 @@ namespace UB.Model
                 //Add default parameters
                 defaultConfig.Parameters.AddRange(
                     new List<ConfigField>() {
-                                    new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "username" },
+                                    new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "codex" },
                                     new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
-                                    new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "#blah, blah2" },
-                                    new ConfigField("Info1", "Enter Username and fill Channels to get readonly access", "Info", true, null),
+                                    new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = String.Empty },
+                                    new ConfigField("Info1", "Fill Username and Channels to get readonly access", "Info", true, null),
                                     new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
                                     new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty }
                                 });
@@ -136,8 +136,11 @@ namespace UB.Model
         }
         private void InitializeChatSettings()
         {
+            if (Ubiquitous.Default.Config == null)
+                Ubiquitous.Default.Config = new ConfigSections();
+
             if (Ubiquitous.Default.Config.ChatConfigs == null)
-            {
+            {                
                 Ubiquitous.Default.Config.ChatConfigs = SettingsRegistry.DefaultChatSettings.ToList();
                 Ubiquitous.Default.Save();
             }

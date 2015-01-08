@@ -29,7 +29,7 @@ namespace UB.Model
                             time = time.AddMinutes(-(time.Minute % intervalMinutes));
                             time = time.AddMilliseconds(-time.Millisecond - 1000 * time.Second);
 
-                            Log.WriteInfo( "Time: {0} viewers: {1}", time, group.Max(item => item.Viewerscount));
+                            //Log.WriteInfo( "Time: {0} viewers: {1}", time, group.Max(item => item.Viewerscount));
                             
                             return new StatisticsViewers()
                             {

@@ -105,7 +105,7 @@ namespace UB.Model
 
             NickName = userName;
 
-            var test = this.With(x => Json.DeserializeUrl<dynamic>(String.Format("https://api.twitch.tv/kraken?oauth_token={0}", authToken)));
+            var test = this.With(x => JsonUtil.DeserializeUrl<dynamic>(String.Format("https://api.twitch.tv/kraken?oauth_token={0}", authToken)));
 
             if (test.token != null && (bool)test.token.valid )
             {
@@ -219,7 +219,7 @@ namespace UB.Model
                 if (Emoticons == null)
                     Emoticons = new List<Emoticon>();
 
-                var jsonEmoticons = this.With(x => Json.DeserializeUrl<TwitchJsonEmoticons>(url))
+                var jsonEmoticons = this.With(x => JsonUtil.DeserializeUrl<TwitchJsonEmoticons>(url))
                     .With(x => x.emoticons);
 
                 if (jsonEmoticons == null)
@@ -411,7 +411,7 @@ namespace UB.Model
 
                 using (stream)
                 {
-                    var followers = Json.DeserializeStream<TwitchFollowers>(stream);
+                    var followers = JsonUtil.DeserializeStream<TwitchFollowers>(stream);
                     if (followers != null && followers.follows != null)
                     {
                         if (currentFollowers.follows == null)
@@ -612,7 +612,7 @@ namespace UB.Model
                     using (stream)
                     {
                         var channelInfo = this.With(x => stream)
-                            .With(x => Json.DeserializeStream<dynamic>(stream));
+                            .With(x => JsonUtil.DeserializeStream<dynamic>(stream));
 
 
                         statsPoller.LastValue = channelInfo;
@@ -811,7 +811,7 @@ namespace UB.Model
             Log.WriteInfo("Twitch initial user list loading for {0}...", ChannelName);
             lock ((Chat as TwitchChat).chatUsersLock)
             {
-                var chatters = Json.DeserializeUrl<TwitchChattersHead>(String.Format("http://tmi.twitch.tv/group/user/{0}/chatters", ChannelName.Replace("#", "")))
+                var chatters = JsonUtil.DeserializeUrl<TwitchChattersHead>(String.Format("http://tmi.twitch.tv/group/user/{0}/chatters", ChannelName.Replace("#", "")))
                     .With(x => x.chatters);
 
                 if (chatters == null)

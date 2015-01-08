@@ -1,17 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UB.Model;
 
 namespace UB.Utils
 {
-    public static class Json
+    public class JsonUtil
     {
+        public static string ToJson(object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
+
+        public static T FromJson<T>(string json) where T : class
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
         public static JArray Sort( JArray jsonArray, string property )
         {
             if (jsonArray == null || String.IsNullOrWhiteSpace(property))

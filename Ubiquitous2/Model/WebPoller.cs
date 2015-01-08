@@ -32,12 +32,13 @@ namespace UB.Model
             IsLongPoll = false;
             IsTimeStamped = true;
             IsAnonymous = false;
+            TimeoutOnError = true;
             wc.Timeout = TimeoutMs;
             wc.ErrorHandler = (error) =>
             {
 
                 Log.WriteError(error);
-                if (gotError)
+                if (gotError && TimeoutOnError )
                 {
                     timer.Change(60000, 60000);
                     return;
@@ -92,6 +93,7 @@ namespace UB.Model
             if( timer != null )
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
         }
+        public bool TimeoutOnError { get; set; }
         public string Id { get; set; }
         public int Interval { get; set; }
         public CookieContainer Cookies { get; set; }

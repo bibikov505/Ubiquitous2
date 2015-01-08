@@ -89,8 +89,23 @@ namespace UB.Model
             Status.ResetToDefault();
             Status.IsStarting = true;
 
-            if (!Login())
-                IsAnonymous = true;
+            var tokenCredentials = Config.GetParameterValue("AuthTokenCredentials") as string ?? "";
+            var username = Config.GetParameterValue("Username") as string ?? "";
+            var password = Config.GetParameterValue("Password") as string ?? "";
+
+            if (tokenCredentials != username + password )
+                Config.SetParameterValue("AuthTokenCredentials", null);
+
+            try
+            {
+                if (!Login())
+                    IsAnonymous = true;
+            }
+            catch( Exception e)
+            {
+                Log.WriteInfo("{0} authorization exception {1}", ChatName, e.Message);
+                IsAnonymous = false;
+            }
 
             Status.IsConnecting = true;
             Task.Factory.StartNew(() => JoinChannels());
@@ -295,7 +310,7 @@ namespace UB.Model
 
             var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
 
-            if (!IsAnonymous && !String.IsNullOrWhiteSpace(NickName))
+            if (!String.IsNullOrWhiteSpace(NickName))
             {
                 if (!channels.Contains("#" + NickName.ToLower()))
                     channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
@@ -385,9 +400,11 @@ namespace UB.Model
         public virtual bool InitEmoticons()
         {
             //Fallback icon list
-            DownloadEmoticons(AppDomain.CurrentDomain.BaseDirectory + EmoticonFallbackUrl);
+            if( !String.IsNullOrWhiteSpace( EmoticonFallbackUrl ))
+                DownloadEmoticons(EmoticonFallbackUrl.Contains(@":\") ? EmoticonFallbackUrl : AppDomain.CurrentDomain.BaseDirectory + EmoticonFallbackUrl);
             //Web icons
-            Task.Factory.StartNew(() => DownloadEmoticons(EmoticonUrl));
+            if( !String.IsNullOrWhiteSpace( EmoticonUrl))
+                Task.Factory.StartNew(() => DownloadEmoticons(EmoticonUrl));
             return true;
         }
 

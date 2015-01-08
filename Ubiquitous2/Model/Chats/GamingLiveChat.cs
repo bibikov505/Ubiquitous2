@@ -226,7 +226,7 @@ namespace UB.Model
         {
             Task.Factory.StartNew(() =>
             {
-                jsonGames = Json.DeserializeUrl<GamingLiveGameList>(@"http://api.gaminglive.tv/games");
+                jsonGames = JsonUtil.DeserializeUrl<GamingLiveGameList>(@"http://api.gaminglive.tv/games");
                 if (jsonGames == null)
                     return;
             });
@@ -252,7 +252,7 @@ namespace UB.Model
 
 
 
-            Json.SerializeToStream<GamingLiveChannelUpdate>(jsonInfo, (stream) =>
+            JsonUtil.SerializeToStream<GamingLiveChannelUpdate>(jsonInfo, (stream) =>
             {
                 var putUrl = @"https://api.gaminglive.tv/channels/";
                 if (null == loginWebClient.PatchStream(putUrl, stream))
@@ -261,7 +261,7 @@ namespace UB.Model
                     LoginWithUsername();
                     jsonInfo.authToken = Config.GetParameterValue("AuthToken") as string;
 
-                    Json.SerializeToStream<GamingLiveChannelUpdate>(jsonInfo, (streamRetry) =>
+                    JsonUtil.SerializeToStream<GamingLiveChannelUpdate>(jsonInfo, (streamRetry) =>
                     {
                         loginWebClient.PatchStream(putUrl, streamRetry);
                     });
@@ -315,7 +315,7 @@ namespace UB.Model
                 using (stream)
                 {
 
-                    var notifications = Json.DeserializeStream<GamingLiveNotification[]>(stream);
+                    var notifications = JsonUtil.DeserializeStream<GamingLiveNotification[]>(stream);
 
                     long lastFollow = 0;                    
                     long.TryParse( Config.GetParameterValue("LastFollowerTime") as string, out lastFollow);
@@ -525,7 +525,7 @@ namespace UB.Model
                 {
                     using( stream )
                     {
-                        var channelInfo = Json.DeserializeStream<GamingLiveChannelStats>(stream);
+                        var channelInfo = JsonUtil.DeserializeStream<GamingLiveChannelStats>(stream);
                         statsPoller.LastValue = channelInfo;
                         int viewers = 0;
                         if (channelInfo != null && channelInfo.state != null)

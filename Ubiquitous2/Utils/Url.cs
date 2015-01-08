@@ -45,5 +45,9 @@ namespace UB.Utils
             return uriBuilder.Uri;
             
         }
+        public static string Encode( string text )
+        {
+            return HttpUtility.UrlEncode(text);
+        }
     }
 }

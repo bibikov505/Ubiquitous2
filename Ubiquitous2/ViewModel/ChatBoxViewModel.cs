@@ -163,7 +163,7 @@ namespace UB.ViewModel
                             }
                             if( messages != null )
                             {
-                                Json.SerializeToStream(messages, (stream) =>
+                                JsonUtil.SerializeToStream(messages, (stream) =>
                                 {
                                     webServer.SendJsonToClient(stream,httpProcessor);
                                 });
@@ -181,7 +181,7 @@ namespace UB.ViewModel
                                 Thread.Sleep(1000);
                                 waitSteps--;
                             }
-                            Json.SerializeToStream(Ubiquitous.Default.Config.AppConfig, (stream) =>
+                            JsonUtil.SerializeToStream(Ubiquitous.Default.Config.AppConfig, (stream) =>
                                 {
                                     webServer.SendJsonToClient(stream,httpProcessor);
                                 });

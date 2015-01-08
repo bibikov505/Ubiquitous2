@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Cache;
-using System.Net.Mime;
 using System.Net.Security;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UB.Model
 {
@@ -31,11 +27,10 @@ namespace UB.Model
                  {ContentType.UrlEncodedUTF8, "application/x-www-form-urlencoded; charset=UTF-8"},
                  {ContentType.UrlEncoded, "application/x-www-form-urlencoded"},
                  {ContentType.Multipart, "multipart/form-data"},
-
+                 
             };
             public WebClientBase()
             {
-
                 ServicePointManager.ServerCertificateValidationCallback =
                     new RemoteCertificateValidationCallback(
                         delegate
@@ -308,6 +303,43 @@ namespace UB.Model
 
                 return coll[name].Value;
             }
+            public List<Cookie> CookiesTable
+            {
+                get
+                {
+                    Hashtable table = (Hashtable)Cookies.GetType().InvokeMember("m_domainTable",
+                                                                 BindingFlags.NonPublic |
+                                                                 BindingFlags.GetField |
+                                                                 BindingFlags.Instance,
+                                                                 null,
+                                                                 Cookies,
+                                                                 new object[] { });
+                    List<Cookie> result = new List<Cookie>();
+                    foreach (var key in table.Keys)
+                    {
+                        var url = String.Format("http://{0}/", key.ToString().TrimStart('.'));
+
+                        foreach (Cookie cookie in Cookies.GetCookies(new Uri(url)))
+                        {                  
+                            result.Add(cookie);
+                        }
+                    }
+
+                    return result;
+                }
+
+                set
+                {
+                    try
+                    {
+                        foreach (Cookie cookie in value)
+                        {
+                            m_container.Add(cookie);
+                        }
+                    }
+                    catch { }
+                }
+            }
 
             public CookieContainer Cookies
             {
@@ -335,7 +367,7 @@ namespace UB.Model
                 }
             }        
             public long GetContentLength( string url )
-            {
+            {                
                 lock(downloadLock)
                 {
                     try

@@ -98,7 +98,7 @@ namespace UB.Model
 
             NickName = userName;
 
-            var test = this.With(x => Json.DeserializeUrl<dynamic>(String.Format("https://www.hitbox.tv/api/teams/codex?authToken={0}",authToken)));
+            var test = this.With(x => JsonUtil.DeserializeUrl<dynamic>(String.Format("https://www.hitbox.tv/api/teams/codex?authToken={0}",authToken)));
             
             if (test.teams != null)
             {
@@ -166,7 +166,7 @@ namespace UB.Model
                 if (Emoticons == null)
                     Emoticons = new List<Emoticon>();
 
-                var jsonEmoticons = this.With(x => Json.DeserializeUrl<JObject>(url));
+                var jsonEmoticons = this.With(x => JsonUtil.DeserializeUrl<JObject>(url));
 
                 if (jsonEmoticons == null)
                 {
@@ -374,7 +374,7 @@ namespace UB.Model
             }
             
             
-            Json.SerializeToStream<JToken>(currentInfo, (stream) => {
+            JsonUtil.SerializeToStream<JToken>(currentInfo, (stream) => {
                 var putUrl = @"https://www.hitbox.tv/api/media/live/{0}?authToken={1}";
                 var userName = Config.GetParameterValue("Username") as string;
                 var authToken = Config.GetParameterValue("AuthToken") as string;
@@ -435,7 +435,7 @@ namespace UB.Model
 
                 using( stream )
                 {
-                    var followers = Json.DeserializeStream<HitboxFollowers>(stream);
+                    var followers = JsonUtil.DeserializeStream<HitboxFollowers>(stream);
                     if (followers != null && followers.followers != null)
                     {
                         if (currentFollowers.followers == null)
@@ -626,7 +626,7 @@ namespace UB.Model
         }
         private void Connect()
         {
-            var servers = Json.DeserializeUrl<HitboxServer[]>("https://www.hitbox.tv/api/chat/servers?redis=true");
+            var servers = JsonUtil.DeserializeUrl<HitboxServer[]>("https://www.hitbox.tv/api/chat/servers?redis=true");
             if (servers == null)
                 return;
 
@@ -880,7 +880,7 @@ namespace UB.Model
                     using (stream)
                     {
                         var channelInfo = this.With(x => stream)
-                            .With(x => Json.DeserializeStream<HitboxChannelStats>(stream))
+                            .With(x => JsonUtil.DeserializeStream<HitboxChannelStats>(stream))
                             .With(x => x.livestream)
                             .With(x => x.FirstOrDefault(livestream => livestream.media_name.Equals(ChannelName.Replace("#", ""), StringComparison.InvariantCultureIgnoreCase)));
 
