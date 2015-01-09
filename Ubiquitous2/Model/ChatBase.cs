@@ -29,6 +29,8 @@ namespace UB.Model
             IsAnonymous = true;
             ReceiveOwnMessages = false;
             Enabled = Config.Enabled;
+            IsChannelCaseSensitive = false;
+            JoinByNickName = true;
         }
         public bool IsAnonymous { get; set; }
         public string EmoticonFallbackUrl { get; set; }
@@ -36,6 +38,8 @@ namespace UB.Model
 
         public bool IsWebEmoticons { get; set; }
         public bool IsFallbackEmoticons { get; set; }
+        public bool IsChannelCaseSensitive { get; set; }
+        public bool JoinByNickName { get; set; }
 
         public string ChatName
         {
@@ -170,6 +174,9 @@ namespace UB.Model
             ChatChannels.ToList().ForEach(chan =>
             {
                 chan.Leave();
+                if (chan.LeaveCallback != null)
+                    chan.LeaveCallback(chan);
+
                 if (RemoveChannel != null)
                     RemoveChannel(chan.ChannelName, this);
             });
@@ -308,12 +315,14 @@ namespace UB.Model
             if (Status.IsStopping || CreateChannel == null)
                 return;
 
-            var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + chan.ToLower().Replace("#", "")).ToArray();
+            var channels = Config.Parameters.StringArrayValue("Channels").Select(chan => "#" + 
+                (!IsChannelCaseSensitive ? chan.ToLower() : chan).Replace("#", "")                
+                ).ToArray();
 
             if (!String.IsNullOrWhiteSpace(NickName))
             {
-                if (!channels.Contains("#" + NickName.ToLower()))
-                    channels = channels.Union(new String[] { NickName.ToLower() }).ToArray();
+                if (!channels.Contains("#" + (!IsChannelCaseSensitive ? NickName.ToLower() : NickName)))
+                    channels = channels.Union(new String[] { (!IsChannelCaseSensitive ? NickName.ToLower(): NickName) }).ToArray();
             }
 
             foreach (var channel in channels)

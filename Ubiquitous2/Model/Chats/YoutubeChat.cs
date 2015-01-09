@@ -29,6 +29,8 @@ namespace UB.Model
             CreateChannel = () => { return new YoutubeChannel(this); };
 
             ReceiveOwnMessages = true;
+            JoinByNickName = false;
+            IsChannelCaseSensitive = true;
 
             //ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoji);
@@ -130,6 +132,7 @@ namespace UB.Model
         private string videoId = null;
         private string lastTime = null;
         private WebClientBase webClient;
+        private string humanReadableChannelName = String.Empty;
         private Random random = new Random();
         private Timer checkTimer;
 
@@ -149,6 +152,9 @@ namespace UB.Model
                 chatPoller.Stop();
             if( statsPoller != null )
                 statsPoller.Stop();
+            
+            if (LeaveCallback != null)
+                LeaveCallback(this);
         }
 
         public override void SendMessage(ChatMessage message)
@@ -184,7 +190,24 @@ namespace UB.Model
             checkTimer = new Timer((obj) =>
             {
                 var youtubeChannel = obj as YoutubeChannel;
+
+                if (String.IsNullOrWhiteSpace(ChannelName))
+                    return;
+
                 var channelUrl = webClient.GetRedirectUrl(String.Format(@"https://www.youtube.com/user/{0}/live", ChannelName.Replace("#", "")));
+                if( channelUrl == null || !channelUrl.Contains("v="))
+                    channelUrl = webClient.GetRedirectUrl(String.Format(@"https://www.youtube.com/channel/{0}/live", ChannelName.Replace("#", "")));
+
+                youtubeChannel.checkTimer.Change(15000, 15000);
+
+                if (String.IsNullOrWhiteSpace(channelUrl))
+                    return;
+
+                humanReadableChannelName = this.With(x => webClient.Download(channelUrl))
+                    .With(x => Re.GetSubString(x, @"name=""title""\s*content=""(.*?)"""));
+
+                youtubeChannel.checkTimer.Change(60000, 60000);
+
                 var id = Re.GetSubString(channelUrl, @"v=([^&]+)");
                 if (!String.IsNullOrWhiteSpace(id) && videoId != id )
                 {
@@ -197,7 +220,7 @@ namespace UB.Model
 
                     youtubeChannel.SetupPollers();
                 }
-            }, this, 0, random.Next(50000,60000));
+            }, this, 0, 15000);
         }
         public void SetupPollers()
         {
@@ -285,7 +308,7 @@ namespace UB.Model
                                     if (ReadMessage != null)
                                         ReadMessage(new ChatMessage()
                                         {
-                                            Channel = ChannelName,
+                                            Channel = String.IsNullOrWhiteSpace(humanReadableChannelName) ? ChannelName : "#" + humanReadableChannelName,
                                             ChatIconURL = Chat.IconURL,
                                             ChatName = Chat.ChatName,
                                             FromUserName = author_name,

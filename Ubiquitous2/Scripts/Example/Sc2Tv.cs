@@ -284,7 +284,7 @@ public class Sc2TvChannel : ChatChannelBase
                 TimeoutOnError = false,
                 IsAnonymous = false,
                 KeepAlive = false,
-                IsTimeStamped = true,                
+                IsTimeStamped = true,      
             };
             chatPoller.ReadStream = (stream) =>
             {
@@ -292,11 +292,8 @@ public class Sc2TvChannel : ChatChannelBase
                 if( !Chat.Status.IsConnected )
                 {
                     Chat.Status.IsConnected = true;
-                    if (!Chat.IsAnonymous)
-                    {
-                        Chat.Status.IsLoggedIn = true;
-                    }
-                    JoinCallback(this);                    
+                    Chat.Status.IsLoggedIn = !Chat.IsAnonymous;
+                    JoinCallback(this);
                 }
 
                 if( stream == null )
