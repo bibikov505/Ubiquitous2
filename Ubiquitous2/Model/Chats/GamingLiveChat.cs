@@ -510,6 +510,9 @@ namespace UB.Model
 
         public override void SetupStatsWatcher()
         {
+            if (ChannelName.Equals("#__$anonymous", StringComparison.InvariantCultureIgnoreCase))
+                return;
+
             statsPoller = new WebPoller()
             {
                 Id = ChannelName,

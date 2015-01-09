@@ -451,7 +451,7 @@ namespace UB.Model
 
     public class TwitchChannel : ChatChannelBase
     {
-        private IrcClient ircClient = new IrcClient();
+        private IrcClient ircClient;
         private Random random = new Random();
         private Timer pingTimer, disconnectTimer;
         private const int pingInterval = 30000;
@@ -472,19 +472,23 @@ namespace UB.Model
 
         public TwitchChannel(TwitchChat chat)
         {
-            Chat = chat;            
+            Chat = chat;
         }
         public override void Join(Action<IChatChannel> callback, string channel)
         {
+            ircClient = new IrcClient();
+
             var safeConnectDelay = Chat.ChatChannels.Count * 100;
             Thread.Sleep(safeConnectDelay);
             ChannelName = "#" + channel.Replace("#", "");
 
             pingTimer = new Timer((sender) => {
                 TryIrc( () => ircClient.Ping() );
+                (sender as TwitchChannel).disconnectTimer.Change(10000, Timeout.Infinite);
             }, this, Timeout.Infinite, Timeout.Infinite);
 
             disconnectTimer = new Timer((sender) => {
+                Log.WriteError("{0} ping timeout", Chat.ChatName);
                 TryIrc( () => Leave());
             }, this, Timeout.Infinite, Timeout.Infinite);
 
@@ -495,15 +499,15 @@ namespace UB.Model
                 var badgesJson = this.With(x => webClient.Download(String.Format(@"https://api.twitch.tv/kraken/chat/{0}/badges", ChannelName.Replace("#", ""))))
                     .With(x => JsonConvert.DeserializeObject<TwitchBadges>(x));
 
-                if (badgesJson == null)
-                    return;
-
-                channelBadges["admin"] = this.With(x => badgesJson.admin).With(x => x.image);
-                channelBadges["broadcaster"] = this.With(x => badgesJson.broadcaster).With(x => x.image);
-                channelBadges["mod"] = this.With(x => badgesJson.mod).With(x => x.image);
-                channelBadges["staff"] = this.With(x => badgesJson.staff).With(x => x.image);
-                channelBadges["turbo"] = this.With(x => badgesJson.turbo).With(x => x.image);
-                channelBadges["subscriber"] = this.With(x => badgesJson.subscriber).With(x => x.image);
+                if (badgesJson != null)
+                {
+                    channelBadges["admin"] = this.With(x => badgesJson.admin).With(x => x.image);
+                    channelBadges["broadcaster"] = this.With(x => badgesJson.broadcaster).With(x => x.image);
+                    channelBadges["mod"] = this.With(x => badgesJson.mod).With(x => x.image);
+                    channelBadges["staff"] = this.With(x => badgesJson.staff).With(x => x.image);
+                    channelBadges["turbo"] = this.With(x => badgesJson.turbo).With(x => x.image);
+                    channelBadges["subscriber"] = this.With(x => badgesJson.subscriber).With(x => x.image);
+                }
             }
             SetUserBadge(ChannelName.ToLower().Replace("#",""), "broadcaster");
 
@@ -526,6 +530,7 @@ namespace UB.Model
                 ircClient.Initialize();
                 ircClient.Disconnected += ircClient_Disconnected;
                 ircClient.RawMessageReceived += ircClient_RawMessageReceived;
+                ircClient.PongReceived += ircClient_PongReceived;
 
                 if (Regex.IsMatch(host, @"\d+\.\d+\.\d+\.\d+"))
                 {
@@ -538,9 +543,12 @@ namespace UB.Model
                         if (hostList == null || hostList.AddressList.Count() <= 0)
                         {
                             Log.WriteError("All servers are down. Domain:" + host);
-                            return;
+                            Leave();
                         }
-                        ircClient.Connect(hostList.AddressList[random.Next(0, hostList.AddressList.Count())], port, false, registrationInfo);
+                        else
+                        {
+                            ircClient.Connect(hostList.AddressList[random.Next(0, hostList.AddressList.Count())], port, false, registrationInfo);
+                        }
                     });
                 }
 
@@ -549,6 +557,11 @@ namespace UB.Model
                 Leave();
             }
 
+        }
+
+        void ircClient_PongReceived(object sender, IrcPingOrPongReceivedEventArgs e)
+        {
+            disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
         void ircClient_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
@@ -586,6 +599,8 @@ namespace UB.Model
 
             TryIrc(() => ircClient.Quit("bye!"));
             TryIrc(() => ircClient.Dispose());
+
+            ircClient = null;
 
             if (LeaveCallback != null)
                 LeaveCallback(this);

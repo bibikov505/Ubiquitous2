@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace UB.Model
 {
-    public class ChatChannelBase : IChatChannel
+    public class ChatChannelBase : IChatChannel, IDisposable
     {
+        private Timer joinTimeout;
         public ChatChannelBase()
         {
             ChannelStats = new ChannelStats();
+            joinTimeout = new Timer((sender) =>
+            {
+                if( !Chat.Status.IsConnected )
+                    Leave();
+            }, this, 60000, Timeout.Infinite);
         }
+
+
 
         public ChatConfig ChatConfig
         {
@@ -74,6 +83,20 @@ namespace UB.Model
         {
             get;
             set;
+        }
+
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        protected virtual void Dispose(bool nativeOnly)
+        {
+            if( joinTimeout != null )
+            {
+                joinTimeout.Dispose();
+                joinTimeout = null;
+            }
         }
     }
 }

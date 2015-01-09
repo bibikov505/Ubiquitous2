@@ -292,20 +292,25 @@ namespace UB.Model
             {
                 UI.Dispatch(() =>
                 {
-                    var channels = ChatChannels.ToList();
-                    Status.ViewersCount = channels.Sum(channel => channel.ChannelStats.ViewersCount);                    
-                    Status.MessagesCount = channels.Sum(channel => channel.ChannelStats.MessagesCount);
-
-                    channels.ForEach(channel =>
+                    lock( channelsLock )
                     {
-                        this.With(x => Status.ToolTips.ToList().FirstOrDefault(tooltip => tooltip.Header.Equals(channel.ChannelName)))
-                            .Do(x =>
-                            {
-                                x.Number = channel.ChannelStats.ViewersCount;
-                                x.Text = channel.ChannelStats.ViewersCount.ToString();
-                            });
+                        var channels = ChatChannels.ToList();
 
-                    });
+                        Status.ViewersCount = channels.Sum(channel => channel.ChannelStats.ViewersCount);                    
+                        Status.MessagesCount = channels.Sum(channel => channel.ChannelStats.MessagesCount);
+
+                        channels.ForEach(channel =>
+                        {
+                            this.With(x => Status.ToolTips.ToList().FirstOrDefault(tooltip => tooltip.Header.Equals(channel.ChannelName)))
+                                .Do(x =>
+                                {
+                                    x.Number = channel.ChannelStats.ViewersCount;
+                                    x.Text = channel.ChannelStats.ViewersCount.ToString();
+                                });
+
+                        });
+                    }
+
                 });
             }
         }
@@ -319,7 +324,8 @@ namespace UB.Model
                 (!IsChannelCaseSensitive ? chan.ToLower() : chan).Replace("#", "")                
                 ).ToArray();
 
-            if (!String.IsNullOrWhiteSpace(NickName))
+            if (!String.IsNullOrWhiteSpace(NickName) && 
+                !String.IsNullOrWhiteSpace( Config.GetParameterValue("Username") as string ))
             {
                 if (!channels.Contains("#" + (!IsChannelCaseSensitive ? NickName.ToLower() : NickName)))
                     channels = channels.Union(new String[] { (!IsChannelCaseSensitive ? NickName.ToLower(): NickName) }).ToArray();
@@ -331,6 +337,11 @@ namespace UB.Model
                 chatChannel.ReadMessage = ReadMessage;
                 chatChannel.LeaveCallback = (leaveChannel) =>
                 {
+                    Log.WriteInfo("{0} leaving channel {1}", Config.ChatName, channel);
+
+                    leaveChannel.ChannelStats.ViewersCount = 0;
+                    leaveChannel.Chat.UpdateStats();
+
                     if (Status.IsLoginFailed)
                         IsAnonymous = true;
 
@@ -354,9 +365,10 @@ namespace UB.Model
                     if (ChatChannels.Count <= 0)
                     {
                         Status.ResetToDefault();
+                        Status.IsConnected = false;
                         Status.IsConnecting = true;
                     }
-
+                    Thread.Sleep(1000);
                     lock( joinLock )
                         JoinChannel(chatChannel, channel);
                 };
@@ -383,7 +395,9 @@ namespace UB.Model
                 {
                     lock( joinLock )
                     {
+                        Log.WriteInfo("{0} joined {1}", Config.ChatName, channel);
 
+                        UpdateStats();
                         if (AddChannel != null)
                             AddChannel(joinChannel.ChannelName, this);
 
