@@ -460,12 +460,12 @@ namespace UB.Model
         }
         private static void PongHandler(GoodgameChannel channel, GoodGameData data)
         {
-            Log.WriteInfo("Goodgame pong received");
+            //Log.WriteInfo("Goodgame pong received");
         }
         private static void WelcomeHandler(GoodgameChannel channel, GoodGameData data)
         {
-            Log.WriteInfo("Goodgame protocol version: {0}", data.ProtocolVersion);
-            Log.WriteInfo("Goodgame servicer identity: {0}", data.ServerIdentity);
+            //Log.WriteInfo("Goodgame protocol version: {0}", data.ProtocolVersion);
+            //Log.WriteInfo("Goodgame servicer identity: {0}", data.ServerIdentity);
 
             channel.SendCredentials();
         }
@@ -488,7 +488,7 @@ namespace UB.Model
         private void SendChannelJoin()
         {
             var channelId = (Chat as GoodgameChat).GetChannelId(ChannelName);
-            Log.WriteInfo("Goodgame serializing join packet. ChannelId: {0}", channelId);
+            //Log.WriteInfo("Goodgame serializing join packet. ChannelId: {0}", channelId);
             var joinPacket = new GoodgamePacket()
             {
                 Type = "join",
@@ -501,7 +501,7 @@ namespace UB.Model
             };
             if( joinPacket != null && joinPacket.Data != null )
             {
-                Log.WriteInfo("Goodgame sending {0}", joinPacket.ToString());
+                //Log.WriteInfo("Goodgame sending {0}", joinPacket.ToString());
                 webSocket.Send(joinPacket.ToString());
             }
         }
@@ -522,11 +522,11 @@ namespace UB.Model
             if (channel.JoinCallback != null)
                 channel.JoinCallback(channel);           
 
-            Log.WriteInfo("Goodgame joined to #{0} id:{1}", data.ChannelName, data.ChannelId);
+            //Log.WriteInfo("Goodgame joined to #{0} id:{1}", data.ChannelName, data.ChannelId);
         }
         private static void ChannelCountersHandler(GoodgameChannel channel, GoodGameData data)
         {
-            Log.WriteInfo("Goodgame counters. Clients: {0}, Users:{1}", data.ClientsInChannel, data.UsersInChannel);
+            //Log.WriteInfo("Goodgame counters. Clients: {0}, Users:{1}", data.ClientsInChannel, data.UsersInChannel);
         }
         private static void MessageHandler(GoodgameChannel channel, GoodGameData data)
         {
@@ -584,7 +584,7 @@ namespace UB.Model
             };
             if (counterPacket != null && counterPacket.Data != null)
             {
-                Log.WriteInfo("Goodgame sending {0}", counterPacket.ToString());
+                //Log.WriteInfo("Goodgame sending {0}", counterPacket.ToString());
                 webSocket.Send(counterPacket.ToString());
             }
         }
@@ -602,7 +602,7 @@ namespace UB.Model
                 },
             };
 
-            Log.WriteInfo("Goodgame sending {0}", authPacket.ToString());
+            //Log.WriteInfo("Goodgame sending {0}", authPacket.ToString());
             webSocket.Send(authPacket.ToString());
         }
         private void SendPing()
@@ -636,7 +636,7 @@ namespace UB.Model
         }
         private void ReadRawMessage(string rawMessage)
         {
-            Log.WriteInfo("Goodgame raw message {0}", rawMessage);
+            //Log.WriteInfo("Goodgame raw message {0}", rawMessage);
             disconnectTimer.Change(disconnectTimeout, Timeout.Infinite);
             if( rawMessage.StartsWith("a"))
             {
@@ -656,7 +656,7 @@ namespace UB.Model
         }
         public override void Leave()
         {
-            Log.WriteInfo("Goodgame.ru leaving {0}", ChannelName);
+            //Log.WriteInfo("Goodgame.ru leaving {0}", ChannelName);
             
             if( timer != null )
                 timer.Change(Timeout.Infinite, Timeout.Infinite);

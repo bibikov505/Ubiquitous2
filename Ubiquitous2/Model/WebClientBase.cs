@@ -124,13 +124,15 @@ namespace UB.Model
                 }
                 return new byte[] {};
             }
-            public MemoryStream DownloadToMemoryStream( String url )
+            public MemoryStream DownloadToMemoryStream( String url, string method = "GET" )
             {
                 try
                 {
                     lock (downloadLock)
                     {
                         var request = GetWebRequest(new Uri(url));
+                        request.Method = method;
+
                         var response = GetWebResponse(request);
 
                         if (SuccessHandler != null)

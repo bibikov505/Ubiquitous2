@@ -17,6 +17,12 @@ namespace UB.Model
             Port = "80";
             PingInterval = 25000;
             SubProtocol = String.Empty;
+            IsSecure = false;
+        }
+        public bool IsSecure
+        {
+            get;
+            set;
         }
         public List<KeyValuePair<string, string>> Cookies
         {
@@ -58,13 +64,15 @@ namespace UB.Model
                 String.IsNullOrEmpty(Host))
                 return;
 
+            string protocol = IsSecure ? "wss" : "ws";
+
             if( Port == "80")
             {
-                url = String.Format("ws://{0}{1}", Host, Path);
+                url = String.Format("{0}://{1}{2}", protocol, Host, Path);
             }
             else
             {
-                url = String.Format("ws://{0}:{1}{2}", Host, Port, Path);
+                url = String.Format("{0}://{1}:{2}{3}", protocol, Host, Port, Path);
             }
 
             try

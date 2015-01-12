@@ -146,6 +146,29 @@
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
+				<DataTrigger Binding="{Binding}" Value="Connectcast.tv">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Viewbox Stretch="Uniform">
+                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+										<Path Data="M53.550499,19.061715 C69.316303,19.257854 84.875263,27.219169 88.547535,39.13485 75.298374,14.979845 30.943243,24.181735 32.671363,47.18646 34.399492,73.066772 83.362942,78.24284 85.667324,48.336699 92.018688,54.672962 92.259647,61.649765 88.547535,69.040947 89.388714,64.787991 88.878948,61.482521 86.819408,59.264027 64.353683,90.895466 9.6295309,73.641811 19.357859,39.297029 25.567444,24.76114 39.63949,18.888651 53.550499,19.061715 z M65.465076,0.50644684 C89.614429,0.20552635 114.04334,10.416452 124.82311,35.691067 141.71138,95.408855 46.710882,125.40905 7.7106199,70.409145 4.1352777,74.266609 3.2503405,80.014061 4.7106066,87.409 -1.7335739,74.557411 -1.3152714,62.426342 9.7106237,51.409004 13.711018,103.409 98.711018,94.409 101.71102,49.409002 104.71102,9.4090023 27.711018,-6.5909977 4.7106066,35.409073 11.085632,14.690409 38.095812,0.8474865 65.465076,0.50644684 z" Height="69" RenderTransformOrigin="0.428798179454109,0.475543576375949" Stretch="Fill" Width="87.978" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Fill="{StaticResource FillColor}">
+											<Path.RenderTransform>
+												<TransformGroup>
+													<ScaleTransform ScaleX="-1"/>
+													<SkewTransform/>
+													<RotateTransform/>
+													<TranslateTransform/>
+												</TransformGroup>
+											</Path.RenderTransform>
+										</Path>
+                                    </Grid>
+                                </Viewbox>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+						
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

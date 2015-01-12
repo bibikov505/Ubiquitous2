@@ -16,7 +16,14 @@ namespace UB.Utils
 
         public static T FromJson<T>(string json) where T : class
         {
-            return JsonConvert.DeserializeObject<T>(json);
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+            catch 
+            {
+                return null;
+            }
         }
 
         public static JArray Sort( JArray jsonArray, string property )

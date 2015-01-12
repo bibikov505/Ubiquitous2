@@ -378,6 +378,15 @@ namespace UB.Model
                                                     IconURL = Icons.CybergameIcon,
                                                 };
                                              }},
+            //Connectcast
+            {ChatTitleConnectcast, (config)=>
+                                            {
+                                                return new ConnectcastChat(config)
+                                                {
+                                                    ChatName = ChatTitleConnectcast,
+                                                    IconURL = Icons.ConnectcastIcon,
+                                                };
+                                             }},
             //Youtube
             {ChatTitleYoutube, (config)=>
                                             {

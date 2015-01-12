@@ -24,6 +24,7 @@ namespace UB.Model
         }
         public void InitWebClient()
         {
+            Method = "GET";
             TimeoutMs = 60000;
             Interval = 30000;
             Delay = 0;
@@ -107,6 +108,7 @@ namespace UB.Model
         public int TimeoutMs { get; set; }
         public int Delay { get; set; }
         public bool IsAnonymous { get; set; }
+        public string Method { get; set; }
         private void poll(object sender)
         {
             if (isStopped)
@@ -124,9 +126,8 @@ namespace UB.Model
 
                 if (obj.ReadStream != null)
                 {
-                    using( Stream stream = obj.wc.DownloadToMemoryStream( obj.Uri.OriginalString))
+                    using( Stream stream = obj.wc.DownloadToMemoryStream( obj.Uri.OriginalString , Method))
                     {
-
                         if (obj.gotError)
                             return;
 
@@ -136,7 +137,16 @@ namespace UB.Model
 
                 if( obj.ReadString != null )
                 {
-                    obj.ReadString(obj.wc.Download(obj.Uri.OriginalString));
+                    if (Method == "GET")
+                    {
+                        obj.ReadString(obj.wc.Download(obj.Uri.OriginalString));
+                    }
+                    else if (Method == "POST")
+                    {
+                        var parameters = String.Join(String.Empty, Uri.Query.Split('?').Skip(1));
+                        obj.ReadString(obj.wc.Upload(obj.Uri.OriginalString, parameters));
+                    }
+
                 }
                 if (IsLongPoll)
                     obj.timer.Change(obj.Delay, Timeout.Infinite);
