@@ -239,6 +239,7 @@
     <Compile Include="Interactivity\BehaviorBase.cs" />
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
+    <Compile Include="Model\Chats\ConnectcastChat.cs" />
     <Compile Include="Model\IScript.cs" />
     <Compile Include="Model\ChatChannelBase.cs" />
     <Compile Include="Model\ChannelStats.cs" />
@@ -274,6 +275,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Resource Include="Resources\connectcast.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Scripts\Example\Sc2Tv.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

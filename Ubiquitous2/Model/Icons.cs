@@ -23,6 +23,7 @@ namespace UB.Model
         public static string GoodgameIcon = @"/Ubiquitous2;component/Resources/goodgame16x16.png";
         public static string CybergameIcon = @"/Ubiquitous2;component/Resources/cybergame.png";
         public static string YoutubeIcon = @"/Ubiquitous2;component/Resources/youtube.png";
+        public static string ConnectcastIcon = @"/Ubiquitous2;component/Resources/connectcast.png";
         public static string LogIcon = @"/Ubiquitous2;component/Resources/log.gif";
 
 

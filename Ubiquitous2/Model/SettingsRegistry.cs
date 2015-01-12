@@ -19,6 +19,7 @@ namespace UB.Model
         public static string ChatTitleGoodgame = "Goodgame.ru";
         public static string ChatTitleCybergame = "Cybergame.tv";
         public static string ChatTitleYoutube = "Youtube.com";
+        public static string ChatTitleConnectcast = "Connectcast.tv";
 
         //Service titles
         public static string ServiceTitleMusicTicker = "Music ticker";
@@ -170,6 +171,22 @@ namespace UB.Model
                             new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = "UnknownSoldier" },
                             new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
                             new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "florektv,cr4nki,thebox,dopefish,niewzruszonamasa" },
+                            new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
+                            new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
+                            new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
+                        }
+                    },
+                    //Connectcast.tv
+                    new ChatConfig()
+                    {
+                        ChatName = ChatTitleConnectcast,
+                        IconURL = Icons.ConnectcastIcon,
+                        Enabled = false,
+                        Parameters = new List<ConfigField>() {
+                            new ConfigField() {  Name = "Username", Label = "Username", DataType = "Text", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Password", Label = "Password", DataType = "Password", IsVisible = true, Value = String.Empty },
+                            new ConfigField() {  Name = "Channels", Label = "Channels", DataType = "Text", IsVisible = true, Value = "xedoc" },
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),

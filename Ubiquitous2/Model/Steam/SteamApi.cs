@@ -322,11 +322,11 @@ namespace UB.SteamApi
                         OnSteamGuard(new SteamEvent());
                         while( String.IsNullOrWhiteSpace(SteamGuardKey))
                         {
-                            if (SteamGuardKey.Equals("Cancel"))
-                                return null;
-
                             Thread.Sleep(16);
                         }
+                        if (SteamGuardKey.Equals("Cancel"))
+                            return null;
+
                         steamGuardText = Uri.EscapeDataString(SteamGuardKey);
                         steamGuardId = (String)loginJson["emailsteamid"];
                     }

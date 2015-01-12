@@ -46,6 +46,13 @@ namespace UB.Model
         #region SteamAPI events
         void SteamChat_SteamGuard(object sender, SteamAPISession.SteamEvent e)
         {
+            for( int i = 0; i < 10; i ++ )
+            {
+                if (RequestData != null)
+                    break;
+                Thread.Sleep(1000);
+            }
+
             RequestData("SteamGuardCode");
             SteamGuardKey = (string)Config.GetParameterValue("AuthToken");
         }

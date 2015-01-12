@@ -83,6 +83,16 @@ namespace UB.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap connectcast {
+            get {
+                object obj = ResourceManager.GetObject("connectcast", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap cybergame {
             get {
                 object obj = ResourceManager.GetObject("cybergame", resourceCulture);
