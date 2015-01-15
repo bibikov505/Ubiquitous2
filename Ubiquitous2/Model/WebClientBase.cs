@@ -456,5 +456,135 @@ namespace UB.Model
                 return null;
             }
 
+            public string PostMultipart(string url, string sData, string boundary)
+            {
+                byte[] data = Encoding.GetBytes(sData);
+
+                return (string)TryWeb(url, () =>
+                {
+                    lock (downloadLock)
+                    {
+                        Encoding = Encoding.UTF8;
+
+                        HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                        request.Headers = Headers;
+                        request.Method = "POST";
+                        request.ContentType = "multipart/form-data; boundary=" + boundary;
+                        request.UserAgent = userAgent;
+                        request.CookieContainer = m_container;
+                        request.ContentLength = data.Length;
+                        request.KeepAlive = true;
+                        using (var requestStream = request.GetRequestStream())
+                        {
+                            requestStream.Write(data, 0, data.Length);
+                            requestStream.Close();
+                        }
+
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            SuccessHandler();
+                            using (Stream resStream = response.GetResponseStream())
+                            {
+                                StreamReader reader = new StreamReader(resStream, Encoding.UTF8);
+                                return reader.ReadToEnd();
+                            }
+                        }
+                    }
+                });
+            }
+
     }
+
+    public enum MultipartPostDataParamType
+    {
+        Field,
+        File
+    }
+    public class MultipartPostData
+    {
+
+        private List<MultipartPostDataParam> m_Params;
+
+        public List<MultipartPostDataParam> Params
+        {
+            get { return m_Params; }
+            set { m_Params = value; }
+        }
+
+        public MultipartPostData()
+        {
+            m_Params = new List<MultipartPostDataParam>();
+
+        }
+
+        public String Boundary
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// Returns the parameters array formatted for multi-part/form data
+        /// </summary>
+        /// <returns></returns>
+        public string GetPostData()
+        {
+            // Get boundary, default is --AaB03x
+
+            Boundary = "----WebKitFormBoundary" + RandomString(16);
+
+            StringBuilder sb = new StringBuilder();
+            foreach (MultipartPostDataParam p in m_Params)
+            {
+                sb.AppendLine("--" + Boundary);
+
+                if (p.Type == MultipartPostDataParamType.File)
+                {
+                    sb.AppendLine(string.Format("Content-Disposition: file; name=\"{0}\"; filename=\"{1}\"", p.Name, p.FileName));
+                    sb.AppendLine("Content-Type: text/plain");
+                    sb.AppendLine();
+                    sb.AppendLine(p.Value);
+                }
+                else
+                {
+                    sb.AppendLine(string.Format("Content-Disposition: form-data; name=\"{0}\"", p.Name));
+                    sb.AppendLine();
+                    sb.AppendLine(p.Value);
+                }
+            }
+
+            sb.AppendLine("--" + Boundary + "--");
+
+            return sb.ToString();
+        }
+        private string RandomString(int Size)
+        {
+            string input = "ABCDEFGHJIKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < Size; i++)
+            {
+                ch = input[random.Next(0, input.Length)];
+                builder.Append(ch);
+            }
+            return builder.ToString();
+        }
+    }
+    public class MultipartPostDataParam
+    {
+
+
+        public MultipartPostDataParam(string name, string value, MultipartPostDataParamType type)
+        {
+            Name = name;
+            Value = value;
+            Type = type;
+        }
+
+        public string Name;
+        public string FileName;
+        public string Value;
+        public MultipartPostDataParamType Type;
+    }
+
 }

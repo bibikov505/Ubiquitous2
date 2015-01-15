@@ -190,6 +190,7 @@ namespace UB.Model
                             new ConfigField() {  Name = "AuthToken", Label = "AuthToken", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField("Info1", "Leave username and password empty and fill channels if you need readonly access", "Info", true, null),
                             new ConfigField("Info2", "Channels is comma separated list. Hashtag is optional. e.g: #xedoc, ipsum, #lorem", "Info", true, null),
+                            new ConfigField() {  Name = "Cookies", Label = "Login cookies", DataType = "Text", IsVisible = false, Value = String.Empty },
                             new ConfigField() {  Name = "AuthTokenCredentials", Label = "Auth token credentials", DataType = "Text", IsVisible = false, Value = String.Empty },
                         }
                     },

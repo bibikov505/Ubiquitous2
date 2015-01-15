@@ -169,6 +169,7 @@ public class Sc2TvChat : ChatBase
 
         var username = Config.GetParameterValue("Username") as string;
         var password = Config.GetParameterValue("Password") as string;
+        Config.SetParameterValue("Cookies", null);
 
         if (String.IsNullOrWhiteSpace(username) || String.IsNullOrWhiteSpace(password) )
         {
