@@ -288,6 +288,7 @@
     <Compile Include="Utils\DeviceHelper.cs" />
     <Compile Include="Utils\ObjectPool.cs" />
     <Compile Include="Utils\Random.cs" />
+    <Compile Include="Utils\Resource.cs" />
     <Compile Include="Utils\Text.cs" />
     <Compile Include="Utils\Url.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
@@ -601,6 +602,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Content Include="Skins\UserTheme\ChatBoxSkin.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\UserTheme\ChatMessageSkin.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\UserTheme\MainWindowSkin.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\UserTheme\GrayScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\UserTheme\Theme.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Page Include="Skins\StarCitizen\ChatBoxSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -672,10 +693,12 @@
     <Page Include="Skins\Simple\ChatBoxSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
     <Page Include="Skins\Simple\ChatMessageSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
     <Page Include="Skins\Shared\ChatReplyCombo.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -684,10 +707,12 @@
     <Page Include="Skins\Simple\MainWindowSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
     <Page Include="Skins\Simple\Skin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
     <Page Include="View\ChatStatusItemView.xaml">
       <SubType>Designer</SubType>
@@ -854,16 +879,16 @@
       <Punctuation>True</Punctuation>
     </BlendEmbeddedFont>
     <None Include="app.manifest" />
-    <Resource Include="Resources\MainThemeThumbnail.png">
+    <Resource Include="Skins\Main\Thumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\SimpleThemeThumbnail.png">
+    <Resource Include="Skins\Simple\Thumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\StarCitizenThemeThumbnail.png">
+    <Resource Include="Skins\StarCitizen\Thumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\BattlefieldThemeThumbnail.png">
+    <Resource Include="Skins\Battlefield\Thumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\youtube.png">
@@ -885,6 +910,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Put your scripts here.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\UserTheme\Thumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\css\battlefield.css">

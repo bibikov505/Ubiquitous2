@@ -82,7 +82,7 @@
                                     </TextBlock.ContextMenu>
                                 </TextBlock>
 
-                            <TextBlock DockPanel.Dock="Right" Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="{Binding AppConfig.FontSizeTimestamp}" Foreground="#FFD69B33" TextAlignment="Right" Margin="0,0,8,0" FontWeight="Bold" Padding="0" VerticalAlignment="Center"/>
+                            <TextBlock Visibility="{Binding AppConfig.ShowTimestamp, Converter={StaticResource boolToVisibilityConverter}}" DockPanel.Dock="Right" Focusable="False" Text="{Binding Message.TimeStamp}" FontSize="{Binding AppConfig.FontSizeTimestamp}" Foreground="#FFD69B33" TextAlignment="Right" Margin="0,0,8,0" FontWeight="Bold" Padding="0" VerticalAlignment="Center"/>
                             </DockPanel>
                             <Border Panel.ZIndex="-1" Focusable="False" Grid.ColumnSpan="2" Grid.Row="1" CornerRadius="0,0,10,10" BorderThickness="4,0,4,4" Padding="2,1" Margin="0,0,0,2" BorderBrush="#FF444444">
                                 <Border.Background>

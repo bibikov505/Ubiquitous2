@@ -43,7 +43,43 @@ namespace UB.ViewModel
             }
 
             AppConfig = Ubiquitous.Default.Config.AppConfig;
+
+            ThemeList = new ObservableCollection<ThemeDescription>(Theme.ThemesList);
+            var currentTheme = ThemeList.FirstOrDefault(theme => theme.Title.Equals(Theme.CurrentTheme));
+            if (currentTheme != null)
+                currentTheme.IsCurrent = true;
         }
+
+        /// <summary>
+        /// The <see cref="ThemeList" /> property's name.
+        /// </summary>
+        public const string ThemeListPropertyName = "ThemeList";
+
+        private ObservableCollection<ThemeDescription> _themeList = new ObservableCollection<ThemeDescription>();
+
+        /// <summary>
+        /// Sets and gets the ThemeList property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<ThemeDescription> ThemeList
+        {
+            get
+            {
+                return _themeList;
+            }
+
+            set
+            {
+                if (_themeList == value)
+                {
+                    return;
+                }
+
+                _themeList = value;
+                RaisePropertyChanged(ThemeListPropertyName);
+            }
+        }
+
         /// <summary>
         /// The <see cref="CurrentTheme" /> property's name.
         /// </summary>
@@ -89,6 +125,13 @@ namespace UB.ViewModel
                                               CurrentTheme = null;
                                               Theme.SwitchTheme(themeName);
                                               CurrentTheme = themeName;
+                                              foreach( var theme in ThemeList )
+                                              {
+                                                  if (theme.Title.Equals(CurrentTheme, StringComparison.CurrentCultureIgnoreCase))
+                                                      theme.IsCurrent = true;
+                                                  else
+                                                      theme.IsCurrent = false;
+                                              }
                                           }));
             }
         }

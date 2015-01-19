@@ -45,6 +45,36 @@ namespace UB.Model
         }
 
         /// <summary>
+        /// The <see cref="ShowTimestamp" /> property's name.
+        /// </summary>
+        public const string ShowTimestampPropertyName = "ShowTimestamp";
+
+        private bool _showTimestamp = true;
+
+        /// <summary>
+        /// Sets and gets the ShowTimestamp property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool ShowTimestamp
+        {
+            get
+            {
+                return _showTimestamp;
+            }
+
+            set
+            {
+                if (_showTimestamp == value)
+                {
+                    return;
+                }
+
+                _showTimestamp = value;
+                RaisePropertyChanged(ShowTimestampPropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="ShowChannel" /> property's name.
         /// </summary>
         public const string ShowChannelPropertyName = "ShowChannel";

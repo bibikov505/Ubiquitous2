@@ -22,19 +22,6 @@ namespace UB.Model
             InitializeChatSettings();
             LoadDebugScripts();
             string folder = AppDomain.CurrentDomain.GetData("DataDirectory") + scriptsSubFolder;
-            if( !Directory.Exists(folder))
-            {
-                try
-                {
-                    Directory.CreateDirectory(folder);
-                    Directory.CreateDirectory(folder + exampleSubFolder);
-                }
-                catch {
-                    Log.WriteError("Unable to create scripts folder!");
-                    return;
-                }
-            }
-
             try
             {
                 var defaultScriptFiles = Directory.GetFiles(@".\Scripts\Example", "*.*", SearchOption.AllDirectories);

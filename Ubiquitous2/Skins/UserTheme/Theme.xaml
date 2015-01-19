@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    >
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="GrayScrollBar.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/Ubiquitous2;component/Skins/Shared/Shared.xaml"/>
+        <ResourceDictionary Source="ChatMessageSkin.xaml"/>
+        <ResourceDictionary Source="ChatBoxSkin.xaml"/>
+        <ResourceDictionary Source="MainWindowSkin.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+
+
+
+</ResourceDictionary>

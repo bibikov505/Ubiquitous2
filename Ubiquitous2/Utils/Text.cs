@@ -43,5 +43,16 @@ namespace UB.Utils
             var result = BitConverter.ToString(Encoding.UTF32.GetBytes(input));
             return result;
         }
+
+        public static string Capitalize(this string text)
+        {
+            if (String.IsNullOrWhiteSpace(text))
+                return text;
+
+            if (text.Length < 2)
+                return text.ToUpper();
+
+            return text.First().ToString().ToUpper() + text.Substring(1).ToLower();
+        }
     }
 }

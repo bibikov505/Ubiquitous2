@@ -12,6 +12,7 @@ using UB.Properties;
 using UB.Utils;
 using System.Deployment.Application;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace UB
 {
@@ -37,13 +38,71 @@ namespace UB
 
             Regex.CacheSize = 0;
 
-            AppDomain.CurrentDomain.SetData("DataDirectory", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ubiquitous2");
+            var rootDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ubiquitous2";
+            CreateDataFolders(rootDataFolder);
+            CopyDataFolders(rootDataFolder);
+            AppDomain.CurrentDomain.SetData("DataDirectory", rootDataFolder );
+
             WebRequest.DefaultWebProxy = null;
 
             var scriptManager = new ScriptManager();
             scriptManager.LoadScripts();
 
             //RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly; 
+        }
+        private void CopyDataFolders(string destinationDir)
+        {
+
+            var copyFolders = new Tuple<string,string>[] {
+                new Tuple<string,string>(@".\Skins\UserTheme", @"\Themes\UserTheme\"),
+            };
+
+            try
+            {
+                foreach( var copyPair in copyFolders )
+                {
+                    if( !Directory.Exists( destinationDir + copyPair.Item2 ))
+                        Directory.CreateDirectory( destinationDir + copyPair.Item2 );
+
+                    var sourceFiles = Directory.GetFiles(copyPair.Item1);
+                    foreach( var file in sourceFiles )
+                    {
+                        File.Copy(file, destinationDir + copyPair.Item2 + Path.GetFileName(file),true);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.WriteError("Data file copy error: {0}", e.Message);
+
+            }
+
+
+        }
+        private void CreateDataFolders(string rootDataFolder)
+        {
+            var appDataFolders = new string[] {
+                @"\Scripts", 
+                @"\Scripts\Example", 
+                @"\Themes",
+                @"\Web",
+                @"\Web\Themes",
+            };
+
+            foreach( var folder in appDataFolders )
+            {
+                if( !Directory.Exists( rootDataFolder + folder ) )
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(rootDataFolder + folder);
+                    }
+                    catch (Exception e) {
+                        Log.WriteError(@"Can't create data directory {0}: {1}", folder, e.Message);
+                    }
+                }
+
+            }
         }
 
     }

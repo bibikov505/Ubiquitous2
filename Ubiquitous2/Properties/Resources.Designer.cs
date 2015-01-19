@@ -61,16 +61,6 @@ namespace UB.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap BattlefieldThemeThumbnail {
-            get {
-                object obj = ResourceManager.GetObject("BattlefieldThemeThumbnail", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         public static System.Drawing.Icon close {
@@ -211,16 +201,6 @@ namespace UB.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap MainThemeThumbnail {
-            get {
-                object obj = ResourceManager.GetObject("MainThemeThumbnail", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         public static System.Drawing.Icon minimize {
@@ -257,26 +237,6 @@ namespace UB.Properties {
             get {
                 object obj = ResourceManager.GetObject("settings", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap SimpleThemeThumbnail {
-            get {
-                object obj = ResourceManager.GetObject("SimpleThemeThumbnail", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap StarCitizenThemeThumbnail {
-            get {
-                object obj = ResourceManager.GetObject("StarCitizenThemeThumbnail", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

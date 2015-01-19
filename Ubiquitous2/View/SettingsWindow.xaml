@@ -16,7 +16,7 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="{Binding AppConfig.IsOnTop}"
-        Title="Ubiquitous2 Settings" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="500.667" MinHeight="250" WindowStartupLocation="Manual" Height="439.667">
+        Title="Ubiquitous2 Settings" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="504.596" MinHeight="250" WindowStartupLocation="Manual" Height="464.548">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
         <Interactivity:UnclosableWindow/>
@@ -29,7 +29,7 @@
         <Converter:StringToIsChecked x:Key="stringToIsCheckedConverter"/>
     </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="2" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chats">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
@@ -90,7 +90,49 @@
 
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Theme">
-                <ScrollViewer Template="{DynamicResource ScrollStyle}">
+                <ItemsControl Focusable="False" 
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                              ScrollViewer.CanContentScroll="True"
+                              VirtualizingPanel.ScrollUnit="Pixel"
+                              ItemsSource="{Binding ThemeList}">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer 
+                                Template="{DynamicResource ScrollStyle}"
+                                VirtualizingPanel.ScrollUnit="Pixel"
+                                CanContentScroll="True">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Command="{Binding Settings.SelectTheme, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding Title}" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding IsCurrent}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                                <Grid>
+                                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left"/>
+                                    <Image Width="150" ToolTip="{Binding Title}" Source="{Binding Thumbnail}" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                        <Image.CacheMode>
+                                            <BitmapCache/>
+                                        </Image.CacheMode>
+                                    </Image>
+                                </Grid>
+                            </RadioButton>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel 
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.ScrollUnit="Pixel" 
+                                Orientation="Vertical">
+                            </VirtualizingStackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+
+
+                <!--<ScrollViewer Template="{DynamicResource ScrollStyle}">
                     <VirtualizingStackPanel Orientation="Vertical">
                         <RadioButton Command="{Binding SelectTheme}" CommandParameter="Main" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Main}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
                             <Grid>
@@ -118,7 +160,7 @@
                             </Grid>
                         </RadioButton>
                     </VirtualizingStackPanel>
-                </ScrollViewer>
+                </ScrollViewer>-->
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Personalization">
                 <Grid Margin="10">
@@ -219,6 +261,7 @@
                                             </TextBlock>
                                             <Label HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="9" Margin="0,-3,0,-6" Content="{Binding AppConfig.FontSizeTimestamp, StringFormat=D}" FontWeight="Normal"/>
                                             <Slider IsSnapToTickEnabled="True"  Value="{Binding AppConfig.FontSizeTimestamp, Mode=TwoWay}" Maximum="24" SmallChange="0.5" TickFrequency="1" TickPlacement="BottomRight" LargeChange="1" Minimum="6" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Height="80" Margin="5,0,0,0"/>
+                                            <CheckBox Margin="0,5" IsChecked="{Binding AppConfig.ShowTimestamp, Mode=TwoWay}" FontWeight="Normal" Content="Visible"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
