@@ -602,23 +602,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Content Include="Skins\UserTheme\ChatBoxSkin.xaml">
+    <Content Include="Skins\SampleTheme\ChatBoxSkin.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\UserTheme\ChatMessageSkin.xaml">
+    <Content Include="Skins\SampleTheme\ChatMessageSkin.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\UserTheme\MainWindowSkin.xaml">
+    <Content Include="Skins\SampleTheme\MainWindowSkin.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\UserTheme\GrayScrollBar.xaml">
+    <Content Include="Skins\SampleTheme\GrayScrollBar.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\UserTheme\Theme.xaml">
+    <Content Include="Skins\SampleTheme\HowTo.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\SampleTheme\Theme.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -912,7 +915,7 @@
     <Content Include="Scripts\Put your scripts here.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\UserTheme\Thumbnail.png">
+    <Content Include="Skins\SampleTheme\Thumbnail.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web\css\battlefield.css">

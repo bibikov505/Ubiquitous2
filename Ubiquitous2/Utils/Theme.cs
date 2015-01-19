@@ -31,6 +31,12 @@ namespace UB.Utils
                 }
                 catch { }
             }
+            else
+            {
+                SwitchTheme("Main");
+                return;
+            }
+            
 
             if( themeUri != null )
             {
@@ -83,13 +89,15 @@ namespace UB.Utils
                                     Title = title,
                                     Thumbnail = CustomThemesFolder + title + @"\Thumbnail.png"
                                 };
-                        });
+                        })
+                        .Where( theme => !theme.Title.Equals("SampleTheme",StringComparison.InvariantCultureIgnoreCase));
 
                     if (localThemes != null)
                         result = result.Union(localThemes).ToList();
 
                     if (userThemes != null)
                         result = result.Union(userThemes).ToList();
+
                 }
                 catch( Exception e)
                 {
@@ -110,12 +118,7 @@ namespace UB.Utils
 
         public static bool IsCustomThemeExist(string themeName)
         {
-            var userTheme = Directory.GetDirectories(CustomThemesFolder)
-                        .FirstOrDefault(folder => File.Exists(CustomThemesFolder + Path.GetFileName(folder) + @"\Theme.xaml"));
-            if (userTheme == null)
-                return false;
-
-            return true;
+            return File.Exists(CustomThemesFolder + themeName + @"\Theme.xaml");
         }
 
         public static bool IsLocalThemeExist(string themeName)

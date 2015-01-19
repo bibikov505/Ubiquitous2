@@ -54,7 +54,7 @@ namespace UB
         {
 
             var copyFolders = new Tuple<string,string>[] {
-                new Tuple<string,string>(@".\Skins\UserTheme", @"\Themes\UserTheme\"),
+                new Tuple<string,string>(@".\Skins\SampleTheme", @"\Themes\SampleTheme\"),
             };
 
             try
