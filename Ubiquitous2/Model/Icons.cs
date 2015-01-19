@@ -8,23 +8,23 @@ namespace UB.Model
 {
     public static class Icons
     {
-        public static string MainIcon = @"/Ubiquitous2;component/Resources/ubiquitous smile.ico";
-        public static string MainHeadsetIcon = @"/Ubiquitous2;component/Resources/ubiheadset.png";
-        public static string TwitchEventIcon = @"/Ubiquitous2;component/Resources/twitchevent.ico";
-        public static string TwitchIcon = @"/Ubiquitous2;component/Resources/twitch.ico";
-        public static string LastFMIcon = @"/Ubiquitous2;component/Resources/lastfm.ico";
-        public static string WebServerIcon = @"/Ubiquitous2;component/Resources/webserver.png";
-        public static string GamingLiveIcon = @"/Ubiquitous2;component/Resources/gaminglive.png";
-        public static string GamingLiveIconDark = @"/Ubiquitous2;component/Resources/gaminglivedark.ico";
-        public static string HitboxIcon = @"/Ubiquitous2;component/Resources/hitbox.png";
-        public static string SteamIcon = @"/Ubiquitous2;component/Resources/steam.ico";
-        public static string PngIcon = @"/Ubiquitous2;component/Resources/png.png";
-        public static string OBSIcon = @"/Ubiquitous2;component/Resources/obs.png";
-        public static string GoodgameIcon = @"/Ubiquitous2;component/Resources/goodgame16x16.png";
-        public static string CybergameIcon = @"/Ubiquitous2;component/Resources/cybergame.png";
-        public static string YoutubeIcon = @"/Ubiquitous2;component/Resources/youtube.png";
-        public static string ConnectcastIcon = @"/Ubiquitous2;component/Resources/connectcast.png";
-        public static string LogIcon = @"/Ubiquitous2;component/Resources/log.gif";
+        public static string MainIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/ubiquitous smile.ico";
+        public static string MainHeadsetIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/ubiheadset.png";
+        public static string TwitchEventIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/twitchevent.ico";
+        public static string TwitchIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/twitch.ico";
+        public static string LastFMIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/lastfm.ico";
+        public static string WebServerIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/webserver.png";
+        public static string GamingLiveIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/gaminglive.png";
+        public static string GamingLiveIconDark = @"pack://application:,,,/Ubiquitous2;component/Resources/gaminglivedark.ico";
+        public static string HitboxIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/hitbox.png";
+        public static string SteamIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/steam.ico";
+        public static string PngIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/png.png";
+        public static string OBSIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/obs.png";
+        public static string GoodgameIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/goodgame16x16.png";
+        public static string CybergameIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/cybergame.png";
+        public static string YoutubeIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/youtube.png";
+        public static string ConnectcastIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/connectcast.png";
+        public static string LogIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/log.gif";
 
 
         public static string DesignMainIcon = @"pack://application:,,,/Ubiquitous2;component/Resources/ubiquitous smile.ico";
