@@ -21,8 +21,10 @@
         TextOptions.TextRenderingMode="Aliased"
         Padding="0" Icon="/Ubiquitous2;component/Resources/ubiquitous smile.ico" d:DesignHeight="394" Width="202.424" Height="394" Foreground="{x:Null}"
         >
+
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="MainWindow"/>
+        <Interactivity:ElementToOBSPlugin SaveInterval="40"/>
         <Interactivity:ClickThroughBehavior EnableMouseTransparency="{Binding EnableMouseTransparency}"/>
     </i:Interaction.Behaviors>
     <i:Interaction.Triggers>

@@ -23,6 +23,8 @@ namespace UB
     {
         public double ChatBoxWidth { get; set; }
         public double ChatBoxHeight { get; set; }
+        public double ChatBoxX { get; set; }
+        public double ChatBoxY { get; set; }
         public AppConfig AppConfig { get; set; }
 
         protected override void OnStartup(StartupEventArgs e)

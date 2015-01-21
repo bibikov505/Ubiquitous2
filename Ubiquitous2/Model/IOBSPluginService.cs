@@ -14,5 +14,9 @@ namespace UB.Model
         ImageData GetImage();
         [OperationContract]
         ImageData GetFirstImage();
+        [OperationContract]
+        void SetConfig(OBSPluginConfig config);
+        [OperationContract]
+        OBSPluginConfig GetConfig();
     }
 }

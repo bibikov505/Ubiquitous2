@@ -239,8 +239,6 @@ namespace UB.Model
 
             webSocket = null;
 
-            
-
             if (LeaveCallback != null)
                 LeaveCallback(this);
         }
@@ -250,6 +248,9 @@ namespace UB.Model
             if (Chat.IsAnonymous || String.IsNullOrWhiteSpace(message.Channel) ||
                 String.IsNullOrWhiteSpace(message.FromUserName) ||
                 String.IsNullOrWhiteSpace(message.Text))
+                return;
+
+            if (webSocket == null)
                 return;
 
             webSocket.Send(String.Format(
@@ -348,7 +349,8 @@ namespace UB.Model
         }
         private void SendPing()
         {
-            webSocket.Send("2");
+            if( webSocket != null )
+                webSocket.Send("2");
         }
 
         public override void SetupStatsWatcher()

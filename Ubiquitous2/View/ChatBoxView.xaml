@@ -19,8 +19,10 @@
 
     <i:Interaction.Behaviors>
         <Interactivity:ElementToPng FileName="{Binding ChatToImagePath}" DelayBefore="600" SaveOnDemand="True" SaveFlag="{Binding SavePngFlag}"/>
-        <Interactivity:ElementToOBSPlugin SaveInterval="40"/>
-        <Interactivity:ElementSizeTracker Width="{Binding ChatBoxWidth, Mode=OneWayToSource}"/>
+        <Interactivity:ElementSizeTracker Width="{Binding ChatBoxWidth, Mode=OneWayToSource}" 
+                                          Height="{Binding ChatBoxHeight, Mode=OneWayToSource}"/>
+        <Interactivity:ElementPositionTracker X="{Binding App.ChatBoxX, Mode=OneWayToSource}" 
+                                              Y="{Binding App.ChatBoxY, Mode=OneWayToSource}"/>
     </i:Interaction.Behaviors>
 
 </UserControl>

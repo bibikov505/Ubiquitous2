@@ -237,6 +237,7 @@
     <Compile Include="Design\GreetingsDataService.cs" />
     <Compile Include="Design\StreamPageDataService.cs" />
     <Compile Include="Interactivity\BehaviorBase.cs" />
+    <Compile Include="Interactivity\ElementPositionTracker.cs" />
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\Chats\ConnectcastChat.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="Model\IStreamPageDataService.cs" />
     <Compile Include="Model\IStreamTopic.cs" />
     <Compile Include="Model\NativeMethods.cs" />
+    <Compile Include="Model\OBSPluginConfig.cs" />
     <Compile Include="Model\OBSPluginService.cs" />
     <Compile Include="Model\OBSRemoteService.cs" />
     <Compile Include="Model\ScriptManager.cs" />
@@ -281,6 +283,7 @@
     <Content Include="Scripts\Example\Sc2Tv.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Compile Include="Settings.cs" />
     <Compile Include="Utils\Bitmap.cs" />
     <Compile Include="Utils\Clone.cs" />
     <Compile Include="Utils\Crypt.cs" />

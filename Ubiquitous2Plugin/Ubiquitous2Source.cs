@@ -19,8 +19,10 @@ namespace Ubiquitous2Plugin
         private Size currentSize = new Size(100, 100);
         private IOBSPluginService pipeProxy;
         private ImageData imageData;
+        private OBSPluginConfig config = new OBSPluginConfig();
         private object imageLock = new object();
         private bool isConnecting = true;
+        private bool isRendering = false;
         public Ubiquitous2Source(XElement configElement)
         {
             UpdateSettings();
@@ -33,7 +35,7 @@ namespace Ubiquitous2Plugin
             lock(imageLock)
                 imageData = null;
 
-            while( imageData == null )
+            while( imageData == null && isRendering )
             {
                 Debug.Print("OBS plugin is trying to reconnect...");
                 try
@@ -71,7 +73,7 @@ namespace Ubiquitous2Plugin
                         }
                         else
                         {
-                            UpdateSettings();
+                            UpdateTexture();
                             break;
                         }
                         
@@ -93,15 +95,56 @@ namespace Ubiquitous2Plugin
         {
             if (isConnecting)
                 return;
+
+            GetImage(x, y, width, height);
+
+            if (imageData != null && texture != null)
+            {
+                UpdateSettings();
+                lock (imageLock)
+                    texture.SetImage(imageData.Pixels, GSImageFormat.GS_IMAGEFORMAT_BGRA, (UInt32)(imageData.Size.Width * 4));
+            }
+            if (texture != null)
+                lock (imageLock)
+                    GS.DrawSprite(texture, 0xFFFFFFFF, x, y, x + width, y + height);
+        }
+
+        public override void UpdateSettings()
+        {            
+            if( imageData == null )
+                return;
+
+            config.HideControls = Properties.Settings.Default.HideControls;
+            pipeProxy.SetConfig(config);
+
+            if (currentSize.Width != imageData.Size.Width ||
+            currentSize.Height != imageData.Size.Height)
+                UpdateTexture();
+        }
+        private void UpdateTexture()
+        {
+            currentSize.Height = imageData.Size.Height;
+            currentSize.Width = imageData.Size.Width;
+            Size.X = currentSize.Width;
+            Size.Y = currentSize.Height;
+            lock (imageLock)
+                texture = GS.CreateTexture((uint)imageData.Size.Width, (uint)imageData.Size.Height, GSColorFormat.GS_BGRA, null, false, false);
+        }
+
+        private void GetImage(float x, float y, float width, float height)
+        {
             try
             {
-                lock(imageLock)
-                    imageData = pipeProxy.GetImage();
+                var image = pipeProxy.GetImage();
+
+                if (image != null)
+                    lock (imageLock)
+                        imageData = image;
             }
             catch
             {
                 isConnecting = true;
-                lock( imageLock )
+                lock (imageLock)
                 {
                     texture = GS.CreateTexture((uint)Size.X, (uint)Size.Y, GSColorFormat.GS_BGRA, null, false, false);
                     GS.DrawSprite(texture, 0xFFFFFFFF, x, y, x + width, y + height);
@@ -109,34 +152,39 @@ namespace Ubiquitous2Plugin
 
                 Task.Run(() => ConnectWCF());
             }
-
-            if (imageData!= null && texture != null)
-            {
-
-                UpdateSettings();
-                lock(imageLock)
-                    texture.SetImage(imageData.Pixels, GSImageFormat.GS_IMAGEFORMAT_BGRA, (UInt32)(imageData.Size.Width * 4));
-            }
-            if( texture != null )
-                lock( imageLock )
-                    GS.DrawSprite(texture, 0xFFFFFFFF, x, y, x + width, y + height);
         }
 
-        public override void UpdateSettings()
+        public override void BeginScene()
         {
-            if( imageData == null )
-                return;
+            isRendering = true;
+            Log.WriteInfo("OBS scene begin");
+            base.BeginScene();
 
-            if (currentSize.Width != imageData.Size.Width ||
-            currentSize.Height != imageData.Size.Height)
+            config.HideControls = Properties.Settings.Default.HideControls;
+
+            pipeProxy.SetConfig(config);
+
+            var image = pipeProxy.GetFirstImage();
+            if( image != null )
+                lock(imageLock )
+                    imageData = image;
+
+            if (imageData == null)
+                Log.WriteError("OBS initial image is null");
+            else
+                UpdateTexture();
+        }
+
+        public override void EndScene()
+        {
+            isRendering = false;
+            Log.WriteInfo("OBS scene end");
+            base.EndScene();
+            try
             {
-                currentSize.Height = imageData.Size.Height;
-                currentSize.Width = imageData.Size.Width;
-                Size.X = currentSize.Width;
-                Size.Y = currentSize.Height;
-                lock (imageLock)
-                    texture = GS.CreateTexture((uint)imageData.Size.Width, (uint)imageData.Size.Height, GSColorFormat.GS_BGRA, null, false, false);
+                pipeFactory.Close();
             }
+            catch { }
         }
     }
 }

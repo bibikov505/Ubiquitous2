@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Ubiquitous2Plugin
 {
@@ -15,12 +16,21 @@ namespace Ubiquitous2Plugin
             ClassName = "Ubiquitous2";
             DisplayName = "Ubiquitous2 chat";
         }
-
         public override bool ShowConfiguration(XElement data)
         {
-                data.Parent.SetFloat("cx", 100);
-                data.Parent.SetFloat("cy", 100);
+            var dialog = new SettingsForm();
+            
+            if( dialog.ShowDialog() == DialogResult.OK )
+            {
+                //data.Parent.SetFloat("cx", 100);
+                //data.Parent.SetFloat("cy", 100);
+                Properties.Settings.Default.Save();
                 return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override ImageSource Create(XElement data)
