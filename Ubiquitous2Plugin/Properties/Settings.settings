@@ -2,11 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Ubiquitous2Plugin.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Config" Provider="UB.PortableSettingsProvider" Roaming="true" Type="Ubiquitous2Plugin.Config.PluginConfig" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="HideControls" Provider="UB.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Width" Provider="UB.PortableSettingsProvider" Roaming="true" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Height" Provider="UB.PortableSettingsProvider" Roaming="true" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">100</Value>
     </Setting>
   </Settings>
 </SettingsFile>

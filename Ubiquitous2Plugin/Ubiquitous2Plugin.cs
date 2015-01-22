@@ -21,7 +21,7 @@ namespace Ubiquitous2Plugin
 
         public Ubiquitous2Plugin()
         {
-            Name = "Ubiquitous2 Chat Source Plugin";
+            Name = "Ubiquitous2 chat";
             Description = "Adds Ubiquitous2 chat as OBS source";
         }
 
@@ -39,9 +39,9 @@ namespace Ubiquitous2Plugin
         public override bool LoadPlugin()
         {
             Debug.Print("Ubiquitous2 OBS plugin: loading...");
+            
             Task.Run(() => CheckUpdates());
             API.Instance.AddImageSourceFactory(new Ubiquitous2Factory());
-            //API.Instance.AddSettingsPane(new Ubiquitous2SettingsPane());
             return true;
         }
         private async void CheckUpdates()

@@ -32,6 +32,9 @@ namespace UB.Interactivity
             if (element == null)
                 return;
 
+            if (Application.Current.MainWindow.WindowState == WindowState.Minimized)
+                return;
+
             Height = element.ActualHeight;
             Width = element.ActualWidth;
         }

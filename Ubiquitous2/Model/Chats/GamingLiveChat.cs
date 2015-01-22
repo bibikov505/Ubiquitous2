@@ -483,13 +483,13 @@ namespace UB.Model
             if( pingTimer != null )
             {
                 pingTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                pingTimer.Dispose();
+                pingTimer = null;
             }
 
             if( disconnectTimer != null )
             {
                 disconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                disconnectTimer.Dispose();
+                disconnectTimer = null;
             }
             
             if( statsPoller != null )

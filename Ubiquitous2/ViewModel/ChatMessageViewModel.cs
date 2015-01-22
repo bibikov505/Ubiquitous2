@@ -61,6 +61,8 @@ namespace UB.ViewModel
 
         private void Initialize(ChatMessage message)
         {
+            App = Application.Current as App;
+
             Message = message;
             if (Message.ChatIconURL == null)
                 Message.ChatIconURL = Icons.MainIcon;
@@ -79,6 +81,9 @@ namespace UB.ViewModel
 
         public double GetEstimatedHeight(double width)
         {
+            if (width > 0 && width != double.NaN)
+                (Application.Current as App).ChatMessageWidth = width;
+
             if (Message.Height <= 0)
                 MeasureHeight(Message.Style);
 
@@ -107,6 +112,36 @@ namespace UB.ViewModel
                 messagePool.PutObject(testMessage);
             }
 
+        }
+
+        /// <summary>
+        /// The <see cref="App" /> property's name.
+        /// </summary>
+        public const string AppPropertyName = "App";
+
+        private App _app = null;
+
+        /// <summary>
+        /// Sets and gets the App property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public App App
+        {
+            get
+            {
+                return _app;
+            }
+
+            set
+            {
+                if (_app == value)
+                {
+                    return;
+                }
+
+                _app = value;
+                RaisePropertyChanged(AppPropertyName);
+            }
         }
 
         /// <summary>

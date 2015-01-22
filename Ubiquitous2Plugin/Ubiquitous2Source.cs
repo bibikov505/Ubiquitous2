@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace Ubiquitous2Plugin
 {
-    internal class Ubiquitous2Source : AbstractImageSource
+    internal class Ubiquitous2Source : AbstractImageSource, IDisposable
     {
         private ChannelFactory<IOBSPluginService> pipeFactory;
         private Texture texture;
@@ -23,8 +23,11 @@ namespace Ubiquitous2Plugin
         private object imageLock = new object();
         private bool isConnecting = true;
         private bool isRendering = false;
-        public Ubiquitous2Source(XElement configElement)
+        private XElement configElement;
+
+        public Ubiquitous2Source(XElement configElement)        
         {
+            this.configElement = configElement;
             UpdateSettings();
             Task.Run(() => ConnectWCF());
         }
@@ -73,6 +76,10 @@ namespace Ubiquitous2Plugin
                         }
                         else
                         {
+                            config.HideControls = Properties.Settings.Default.HideControls;
+                            pipeProxy.SetConfig(config);
+
+                            UpdateSettings();
                             UpdateTexture();
                             break;
                         }
@@ -114,25 +121,43 @@ namespace Ubiquitous2Plugin
             if( imageData == null )
                 return;
 
-            config.HideControls = Properties.Settings.Default.HideControls;
-            pipeProxy.SetConfig(config);
+            Size.X = currentSize.Width;
+            Size.Y = currentSize.Height;
+
+            Properties.Settings.Default.Width = Size.X;
+            Properties.Settings.Default.Height = Size.Y;
+
+            if (config.HideControls != Properties.Settings.Default.HideControls)
+            {
+                config.HideControls = Properties.Settings.Default.HideControls;
+                pipeProxy.SetConfig(config);
+                lock (imageLock)
+                    imageData = pipeProxy.GetFirstImage();
+                Log.WriteInfo("OBS image size: {0}x{1}", imageData.Size.Width, imageData.Size.Height);
+            }
 
             if (currentSize.Width != imageData.Size.Width ||
             currentSize.Height != imageData.Size.Height)
+            {
                 UpdateTexture();
+            }
         }
         private void UpdateTexture()
         {
+            if (imageData == null)
+                return;
+
             currentSize.Height = imageData.Size.Height;
             currentSize.Width = imageData.Size.Width;
-            Size.X = currentSize.Width;
-            Size.Y = currentSize.Height;
             lock (imageLock)
+            {
                 texture = GS.CreateTexture((uint)imageData.Size.Width, (uint)imageData.Size.Height, GSColorFormat.GS_BGRA, null, false, false);
+                texture.SetImage(imageData.Pixels, GSImageFormat.GS_IMAGEFORMAT_BGRA, (UInt32)(imageData.Size.Width * 4));
+            }
         }
 
         private void GetImage(float x, float y, float width, float height)
-        {
+        {          
             try
             {
                 var image = pipeProxy.GetImage();
@@ -185,6 +210,11 @@ namespace Ubiquitous2Plugin
                 pipeFactory.Close();
             }
             catch { }
+        }
+
+        public void Dispose()
+        {
+           
         }
     }
 }

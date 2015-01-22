@@ -25,6 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ubiquitous2Plugin", "Ubiqui
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ubiquitous2PluginInstaller", "Ubiquitous2PluginInstaller\Ubiquitous2PluginInstaller.csproj", "{1622B11B-2735-4557-B4F2-45DFCB529517}"
 	ProjectSection(ProjectDependencies) = postProject
+		{F108C864-7737-4E61-834B-D8313028607C} = {F108C864-7737-4E61-834B-D8313028607C}
 		{2135C29B-BD82-41E1-80F4-4A0C97336481} = {2135C29B-BD82-41E1-80F4-4A0C97336481}
 	EndProjectSection
 EndProject

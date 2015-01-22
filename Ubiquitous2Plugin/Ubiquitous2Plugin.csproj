@@ -82,7 +82,6 @@
     <Compile Include="..\Ubiquitous2\Utils\Re.cs">
       <Link>Re.cs</Link>
     </Compile>
-    <Compile Include="Config\PluginConfig.cs" />
     <Compile Include="Properties\PortableSettingsProvider.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

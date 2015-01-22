@@ -23,6 +23,7 @@
     </i:Interaction.Triggers>
 
     <i:Interaction.Behaviors>
+        <Interactivity:ElementPositionTracker X="{Binding App.ChatMessageX, Mode=OneWayToSource}"/>
         <Interactivity:ElementSizeTracker Height="{Binding Message.Height, Mode=OneWayToSource}"/>
     </i:Interaction.Behaviors>
 

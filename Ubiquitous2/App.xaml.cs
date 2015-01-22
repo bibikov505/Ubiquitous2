@@ -25,6 +25,15 @@ namespace UB
         public double ChatBoxHeight { get; set; }
         public double ChatBoxX { get; set; }
         public double ChatBoxY { get; set; }
+        public double ChatMessageWidth { get; set; }
+        private double _chatMessageX;
+
+        public double ChatMessageX
+        {
+            get { return _chatMessageX; }
+            set { if( !double.IsNaN(value) ) _chatMessageX = value; }
+        }
+        
         public AppConfig AppConfig { get; set; }
 
         protected override void OnStartup(StartupEventArgs e)

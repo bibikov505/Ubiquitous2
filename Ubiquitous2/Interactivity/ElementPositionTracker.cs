@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using UB.Model;
 using UB.Utils;
 
 namespace UB.Interactivity
@@ -17,12 +18,19 @@ namespace UB.Interactivity
         protected override void Attach()
         {
             element = AssociatedObject;
+            container = Application.Current.MainWindow;
             element.LayoutUpdated += element_LayoutUpdated;
         }
         void UpdateData()
         {
-            container = Application.Current.MainWindow;
+            if (element == null ||
+                Application.Current.MainWindow.WindowState == WindowState.Minimized ||
+                !element.IsVisible ||
+                !element.IsArrangeValid)
+                return;
+
             relativeLocation = element.TranslatePoint(new Point(0, 0), container);
+
             X = relativeLocation.X;
             Y = relativeLocation.Y;
         }
