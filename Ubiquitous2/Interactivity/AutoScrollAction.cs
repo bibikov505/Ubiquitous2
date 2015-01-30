@@ -83,8 +83,11 @@ namespace UB.Interactivity
 
         protected void InstantScrollToBottom()
         {
-            var scrollViewer = this.Target;
-            scrollViewer.ScrollToBottom();
+            lock( scrollLock )
+            {
+                var scrollViewer = this.Target;
+                scrollViewer.ScrollToBottom();
+            }
         }
 
         /// <summary>

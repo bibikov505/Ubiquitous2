@@ -76,10 +76,14 @@ namespace Ubiquitous2Plugin
                         }
                         else
                         {
+                            Log.WriteInfo("Got first image {0}x{1}", imageData.Size.Width, imageData.Size.Height);
                             config.HideControls = Properties.Settings.Default.HideControls;
+                            Log.WriteInfo("Set config");
                             pipeProxy.SetConfig(config);
 
+                            Log.WriteInfo("Update settings");
                             UpdateSettings();
+                            Log.WriteInfo("Update texture");
                             UpdateTexture();
                             break;
                         }
@@ -133,7 +137,6 @@ namespace Ubiquitous2Plugin
                 pipeProxy.SetConfig(config);
                 lock (imageLock)
                     imageData = pipeProxy.GetFirstImage();
-                Log.WriteInfo("OBS image size: {0}x{1}", imageData.Size.Width, imageData.Size.Height);
             }
 
             if (currentSize.Width != imageData.Size.Width ||

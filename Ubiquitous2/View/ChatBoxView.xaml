@@ -24,5 +24,11 @@
         <Interactivity:ElementPositionTracker X="{Binding App.ChatBoxX, Mode=OneWayToSource}" 
                                               Y="{Binding App.ChatBoxY, Mode=OneWayToSource}"/>
     </i:Interaction.Behaviors>
+	<Grid>
+		<StackPanel Orientation="Vertical">
+			<TextBlock>test</TextBlock>
+			<ContentPresenter/>
+		</StackPanel>
+	</Grid>
 
 </UserControl>

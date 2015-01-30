@@ -476,6 +476,9 @@ namespace UB.Model
         }
         public override void Join(Action<IChatChannel> callback, string channel)
         {
+            if (Regex.IsMatch(channel, @"justinfan\d+"))
+                return;
+
             ircClient = new IrcClient();
 
             var safeConnectDelay = Chat.ChatChannels.Count * 100;

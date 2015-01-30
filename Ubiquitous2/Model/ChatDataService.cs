@@ -150,7 +150,7 @@ namespace UB.Model
         }
         private void UpdateDatabase()
         {
-            foreach (var chat in Chats.Where(chat => chat != null && chat.Config.Enabled && chat.Status != null))
+            foreach (var chat in Chats.ToList().Where(chat => chat != null && chat.Config.Enabled && chat.Status != null))
                 _databaseService.AddViewersCount( chat.ChatName, chat.Status.ViewersCount);
         }
         public void StartAllChats()

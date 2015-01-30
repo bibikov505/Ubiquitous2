@@ -38,14 +38,12 @@ namespace UB.Model
 
                     if( Config != null && app != null && currentSize != null && Config.HideControls )
                     {
-                        Log.WriteInfo("chatmessagex before: {0}, width: {1}", app.ChatMessageX, app.ChatMessageWidth);
-
                         var x = (int)(double.IsNaN(app.ChatMessageX) ? 0 : app.ChatMessageX);
                         x = x < 0 ? 0 : x;
 
                         var y = (int)(double.IsNaN(app.ChatBoxY) ? 0 : app.ChatBoxY);
                         var height = (int)System.Windows.Application.Current.MainWindow.Height - y;
-                        var width = (int)app.ChatMessageWidth > 0 ? (int)app.ChatMessageWidth + x: (int)app.ChatBoxWidth;
+                        var width = (int)app.ChatMessageWidth > 0 ? (int)(app.ChatMessageWidth + x - app.ChatBoxX) : (int)app.ChatBoxWidth;
                         
                         currentSize.Width = width;
                         currentSize.Height = height;
@@ -54,8 +52,6 @@ namespace UB.Model
                             y, 
                             width,
                             height);
-
-                        Log.WriteInfo("chatmessagex after: {0}, width: {1}", app.ChatMessageX, app.ChatMessageWidth);
 
                     }
                     else

@@ -53,6 +53,7 @@ namespace UB.ViewModel
                 SimpleIoc.Default.Register<IStreamPageDataService, StreamPageDataService>();
                 SimpleIoc.Default.Register<IGreetingsDataService, GreetingsDataService>();
             }
+            SimpleIoc.Default.Register<ChannelsSideTabsViewModel>();
             SimpleIoc.Default.Register<UserListViewModel>();
             SimpleIoc.Default.Register<SubFollowDonationViewModel>();
             SimpleIoc.Default.Register<StreamTopicSectionViewModel>();
@@ -263,6 +264,14 @@ namespace UB.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<UserListViewModel>();
+            }
+        }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This non-static member is needed for data binding purposes.")]
+        public ChannelsSideTabsViewModel ChannelsSideTabs
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ChannelsSideTabsViewModel>();
             }
         }
        
