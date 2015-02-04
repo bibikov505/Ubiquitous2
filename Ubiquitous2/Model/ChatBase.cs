@@ -41,6 +41,12 @@ namespace UB.Model
         public bool IsChannelCaseSensitive { get; set; }
         public bool JoinByNickName { get; set; }
 
+        public string AnonymousNickName
+        { 
+            get; 
+            set; 
+        }
+
         public string ChatName
         {
             get;
@@ -171,15 +177,18 @@ namespace UB.Model
             Status.IsStopping = true;
             Status.IsStarting = false;
 
-            ChatChannels.ToList().ForEach(chan =>
+            lock( channelsLock )
             {
-                chan.Leave();
-                if (chan.LeaveCallback != null)
-                    chan.LeaveCallback(chan);
+                ChatChannels.ToList().ForEach(chan =>
+                {
+                    chan.Leave();
+                    if (chan.LeaveCallback != null)
+                        chan.LeaveCallback(chan);
 
-                if (RemoveChannel != null)
-                    RemoveChannel(chan.ChannelName, this);
-            });
+                    if (RemoveChannel != null)
+                        RemoveChannel(chan.ChannelName, this);
+                });
+            }
 
             lock(toolTipLock)
             {
@@ -212,17 +221,20 @@ namespace UB.Model
             if (IsAnonymous)
                 return false;
 
-            this.With(x => ChatChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase)))
-                .Do(x =>
-                {
-                    if (String.IsNullOrWhiteSpace(message.FromUserName))
+            lock( channelsLock)
+            {
+                this.With(x => ChatChannels.FirstOrDefault(channel => channel.ChannelName.Equals(message.Channel, StringComparison.InvariantCultureIgnoreCase)))
+                    .Do(x =>
                     {
-                        message.FromUserName = NickName;
-                    }
-                    Task.Factory.StartNew(() => x.SendMessage(message));
-                    if( ReceiveOwnMessages)
-                        ReadMessage(message);
-                });
+                        if (String.IsNullOrWhiteSpace(message.FromUserName))
+                        {
+                            message.FromUserName = NickName;
+                        }
+                        Task.Factory.StartNew(() => x.SendMessage(message));
+                        if( ReceiveOwnMessages)
+                            ReadMessage(message);
+                    });
+            }
 
             return true;
         }
@@ -362,11 +374,14 @@ namespace UB.Model
                     if (Status.IsStopping)
                         return;
 
-                    if (ChatChannels.Count <= 0)
+                    lock( channelsLock  )
                     {
-                        Status.ResetToDefault();
-                        Status.IsConnected = false;
-                        Status.IsConnecting = true;
+                        if (ChatChannels.Count <= 0)
+                        {
+                            Status.ResetToDefault();
+                            Status.IsConnected = false;
+                            Status.IsConnecting = true;
+                        }
                     }
                     Thread.Sleep(1000);
                     lock( joinLock )
@@ -381,38 +396,40 @@ namespace UB.Model
         private void JoinChannel( IChatChannel chatChannel, string channel )
         {
             lock( channelsLock )
-            if (!ChatChannels.Any(c => c.ChannelName == channel))
             {
-                Log.WriteInfo("{0} joining {1}", Config.ChatName, channel);
+                if (!ChatChannels.Any(c => c.ChannelName == channel) && 
+                    !channel.Replace("#","").Equals(AnonymousNickName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Log.WriteInfo("{0} joining {1}", Config.ChatName, channel);
 
-                if (RemoveChannel != null)
-                    RemoveChannel(chatChannel.ChannelName, this);
+                    if (RemoveChannel != null)
+                        RemoveChannel(chatChannel.ChannelName, this);
 
-                lock (channelsLock)
                     ChatChannels.Add(chatChannel);
 
-                chatChannel.Join((joinChannel) =>
-                {
-                    lock( joinLock )
+                    chatChannel.Join((joinChannel) =>
                     {
-                        Log.WriteInfo("{0} joined {1}", Config.ChatName, channel);
-
-                        UpdateStats();
-                        if (AddChannel != null)
-                            AddChannel(joinChannel.ChannelName, this);
-
-                        if (Status.IsStopping)
-                            return;
-                        
-                        lock (toolTipLock)
+                        lock( joinLock )
                         {
-                            if (!Status.ToolTips.ToList().Any(t => t.Header == channel))
-                                UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(channel, joinChannel.ChannelStats.ViewersCount.ToString())));
+                            Log.WriteInfo("{0} joined {1}", Config.ChatName, channel);
+
+                            UpdateStats();
+                            if (AddChannel != null)
+                                AddChannel(joinChannel.ChannelName, this);
+
+                            if (Status.IsStopping)
+                                return;
+                        
+                            lock (toolTipLock)
+                            {
+                                if (!Status.ToolTips.ToList().Any(t => t.Header == channel))
+                                    UI.Dispatch(() => Status.ToolTips.Add(new ToolTip(channel, joinChannel.ChannelStats.ViewersCount.ToString())));
+                            }
+                            Status.IsConnecting = false;
+                            Status.IsConnected = true;
                         }
-                        Status.IsConnecting = false;
-                        Status.IsConnected = true;
-                    }
-                }, channel);
+                    }, channel);
+                }
             }
         }
         public virtual bool Login()

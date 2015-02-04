@@ -25,7 +25,8 @@ namespace UB.Model
         {
             CreateChannel = () => { return new GamingLiveChannel(this); };
 
-            NickName = "__$anonymous";
+            AnonymousNickName = "__$anonymous";
+            NickName = AnonymousNickName;
 
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseSimpleImageTags);
@@ -375,20 +376,8 @@ namespace UB.Model
             webSocket.Origin = "http://www.gaminglive.tv";
             webSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}", 
                 ChannelName.Replace("#", ""), 
-                Chat.IsAnonymous ? "__$anonymous" : Chat.NickName, 
-                Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
-
-
-            //secondWebSocket = new WebSocketBase();
-            //secondWebSocket.Host = "api.gaminglive.tv";
-            //secondWebSocket.PingInterval = 0;
-            //secondWebSocket.Origin = "http://www.gaminglive.tv";
-            //secondWebSocket.Path = String.Format("/chat/{0}?nick={1}&authToken={2}",
-            //    ChannelName.Replace("#", ""),
-            //    Chat.IsAnonymous ? "__$anonymous" : Chat.NickName,
-            //    Chat.IsAnonymous ? "__$anonymous" : Chat.Config.GetParameterValue("AuthToken").ToString());
-
-            //secondWebSocket.Connect();
+                Chat.IsAnonymous ? (Chat as ChatBase).AnonymousNickName : Chat.NickName,
+                Chat.IsAnonymous ? (Chat as ChatBase).AnonymousNickName : Chat.Config.GetParameterValue("AuthToken").ToString());
 
             disconnectTimer = new Timer((sender) => {
                 Log.WriteInfo("Gaminglive socket state: {0}", webSocket.State.ToString());
@@ -510,7 +499,7 @@ namespace UB.Model
 
         public override void SetupStatsWatcher()
         {
-            if (ChannelName.Equals("#__$anonymous", StringComparison.InvariantCultureIgnoreCase))
+            if (ChannelName.Equals("#" + (Chat as ChatBase).AnonymousNickName, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
             statsPoller = new WebPoller()

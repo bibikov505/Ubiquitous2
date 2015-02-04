@@ -739,7 +739,8 @@ namespace UB.SteamApi
         {
             if ( umqid == null ) return false;
 
-            String response = steamRequest( "ISteamWebUserPresenceOAuth/Message/v0001", "?access_token=" + accessToken + "&umqid=" + umqid + "&type=saytext&text=" + Uri.EscapeDataString( message ) + "&steamid_dst=" + user.steamid );
+            String response = steamRequest( "ISteamWebUserPresenceOAuth/Message/v0001", 
+                "?access_token=" + accessToken + "&umqid=" + umqid + "&type=saytext&text=" + HttpUtility.UrlEncode( message ) + "&steamid_dst=" + user.steamid );
 
             if ( response != null )
             {

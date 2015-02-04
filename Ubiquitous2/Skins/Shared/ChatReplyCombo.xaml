@@ -21,6 +21,7 @@
 
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="White" />
 
+    
     <SolidColorBrush x:Key="MainColor" Color="#FF686868"/>
     <!--<SolidColorBrush x:Key="MainColorLight" Color="LightSkyBlue"/>
     <SolidColorBrush x:Key="MainColorDark" Color="#00A7DF"/>-->
@@ -35,6 +36,7 @@
     <SolidColorBrush x:Key="ForegroundBrush" Color="Black"/>
 
     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#CC444444"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#CC444444"/>
     <RadialGradientBrush x:Key="MouseLeaveGradient" GradientOrigin="2,0.5" RadiusX="1">
         <GradientStop Color="#FF212121" Offset="1"/>
         <GradientStop Color="#FF424242"/>

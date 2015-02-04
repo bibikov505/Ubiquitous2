@@ -28,8 +28,9 @@ namespace UB.Model
         {
             EmoticonUrl = "https://www.hitbox.tv/api/chat/icons/UnknownSoldier";
             EmoticonFallbackUrl = @"Content\hitboxemoticons.json";
-            
-            NickName = "UnknownSoldier";
+
+            AnonymousNickName = "UnknownSoldier";
+            NickName = AnonymousNickName;
 
             CreateChannel = () => { return new HitboxChannel(this); };
 
@@ -87,7 +88,7 @@ namespace UB.Model
             if (tokenCredentials != userName + password)
                 return false;
 
-            if( String.IsNullOrEmpty(userName) || userName.Equals("unknownsoldier",StringComparison.InvariantCultureIgnoreCase))
+            if( String.IsNullOrEmpty(userName) || userName.Equals(AnonymousNickName,StringComparison.InvariantCultureIgnoreCase))
             {
                 IsAnonymous = true;
                 return true;
@@ -422,7 +423,7 @@ namespace UB.Model
             var getUrl = @"https://www.hitbox.tv/api/followers/user/{0}?limit=50";
             var userName = Config.GetParameterValue("Username") as string;
 
-            if (userName.Equals("unknownsoldier", StringComparison.InvariantCultureIgnoreCase))
+            if (userName.Equals(AnonymousNickName, StringComparison.InvariantCultureIgnoreCase))
                 return;
             
             followerPoller.Id = "followersPoller";

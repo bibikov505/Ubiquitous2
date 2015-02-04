@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using GalaSoft.MvvmLight.Ioc;
 using UB.Utils;
@@ -67,6 +68,11 @@ namespace UB.Model
                     SendCachedImageToClient(uri.OriginalString, processor);
                     return;
                 }
+            }
+            
+            if (uri.OriginalString.ToLower().Contains("/?lfile="))
+            {
+                uri = new Uri(HttpUtility.UrlDecode(Url.GetParameter(uri, "lfile")));
             }
 
             Log.WriteInfo("Httpserver sending {0} to client as {1}", uri.LocalPath,contentType);
@@ -139,16 +145,20 @@ namespace UB.Model
                 jsonStream.CopyTo(httpProcessor.OutputStream.BaseStream);
             }
         }
-        private FileStream GetFile( string relativePath )
+        private FileStream GetFile( string path )
         {
-            var relativeFilePath = (webContentFolder + relativePath.Replace("/", @"\")).Replace(@"\\",@"\");
+            var fullPath = path;
+            
+            if( !Re.IsMatch( path, @"^.:\\.*$"))
+                fullPath = (webContentFolder + path.Replace("/", @"\")).Replace(@"\\", @"\");
+
             try
             {
-                return File.OpenRead(relativeFilePath);
+                return File.OpenRead(fullPath);
             }
             catch
             {
-                Log.WriteError("Web server is unable to read a file: {0}", relativeFilePath);
+                Log.WriteError("Web server is unable to read a file: {0}", fullPath);
                 return null;
             }
         }

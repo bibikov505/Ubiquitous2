@@ -1042,6 +1042,9 @@
     <Content Include="web\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="web\js\ubiquitous.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web\js\jquery-1.11.1.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

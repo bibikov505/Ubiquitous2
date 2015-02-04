@@ -35,8 +35,8 @@ namespace UB.Model
             EmoticonFallbackUrl = @"Content\twitchemoticons.json";
 
             ReceiveOwnMessages = true;
-
-            NickName = "justinfan" + random.Next(1000000, 9999999).ToString();
+            AnonymousNickName = "justinfan" + random.Next(1000000, 9999999).ToString();
+            NickName = AnonymousNickName;
 
             CreateChannel = () => { return new TwitchChannel(this); };
 
@@ -94,7 +94,10 @@ namespace UB.Model
             if (tokenCredentials != userName + password)
                 return false;
 
-            if (String.IsNullOrEmpty(userName) || Regex.IsMatch(userName, @"justinfan\d+", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(userName, @"justinfan\d+"))
+                AnonymousNickName = userName;
+
+            if (String.IsNullOrEmpty(userName) || userName.Equals(AnonymousNickName, StringComparison.InvariantCultureIgnoreCase))
             {
                 IsAnonymous = true;
                 return true;
@@ -125,11 +128,14 @@ namespace UB.Model
             var userName = Config.GetParameterValue("Username") as string;
             var password = Config.GetParameterValue("Password") as string;
 
-            if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password) || Regex.IsMatch(userName, @"justinfan\d+", RegexOptions.IgnoreCase))
+            if (String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password) || userName.Equals(AnonymousNickName, StringComparison.InvariantCultureIgnoreCase))
             {
                 IsAnonymous = true;
                 return true;
             }
+            
+            if (Regex.IsMatch(userName, @"justinfan\d+"))
+                AnonymousNickName = userName;
 
             NickName = userName;
          
@@ -201,10 +207,13 @@ namespace UB.Model
 
         public override bool SendMessage(ChatMessage message)
         {        
-            message.UserBadges = new ObservableCollection<UserBadge>() {
-                new UserBadge() { Title = "broadcaster", Url = "http://chat-badges.s3.amazonaws.com/broadcaster.png"}
-            };
+            if( message.Channel.Replace("#","").Equals( NickName, StringComparison.InvariantCultureIgnoreCase) )
+            {
+                message.UserBadges = new ObservableCollection<UserBadge>() {
+                    new UserBadge() { Title = "broadcaster", Url = "http://chat-badges.s3.amazonaws.com/broadcaster.png"}
+                };
 
+            }
             return base.SendMessage(message);
         }
 
@@ -476,9 +485,6 @@ namespace UB.Model
         }
         public override void Join(Action<IChatChannel> callback, string channel)
         {
-            if (Regex.IsMatch(channel, @"justinfan\d+"))
-                return;
-
             ircClient = new IrcClient();
 
             var safeConnectDelay = Chat.ChatChannels.Count * 100;
@@ -515,7 +521,7 @@ namespace UB.Model
             SetUserBadge(ChannelName.ToLower().Replace("#",""), "broadcaster");
 
             JoinCallback = callback;
-            var nickname = Chat.IsAnonymous ? "justinfan" + random.Next(100000, 999999) : Chat.NickName;
+            var nickname = Chat.IsAnonymous ? (Chat as ChatBase).AnonymousNickName : Chat.NickName;
             var registrationInfo = new IrcUserRegistrationInfo() {
                 UserName = nickname,
                 NickName = nickname,

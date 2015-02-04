@@ -14,6 +14,7 @@ using System.Windows.Threading;
 using System.Threading;
 using Newtonsoft.Json;
 using GalaSoft.MvvmLight.Command;
+using System.Text.RegularExpressions;
 
 namespace UB.ViewModel
 {
@@ -164,6 +165,15 @@ namespace UB.ViewModel
                             }
                             if( messages != null )
                             {
+                                foreach (var msg in messages)
+                                {
+                                    msg.ChatIconURL = msg.ChatIconURL.Replace("pack://application:,,,", "");
+                                    if( Regex.IsMatch( msg.ChatIconURL, @"^.:\\.*$"))
+                                    {
+                                        msg.ChatIconURL = "/?lfile=" + HttpUtility.UrlEncode( msg.ChatIconURL );
+                                    }
+                                }
+
                                 JsonUtil.SerializeToStream(messages, (stream) =>
                                 {
                                     webServer.SendJsonToClient(stream,httpProcessor);

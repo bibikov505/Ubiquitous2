@@ -18,6 +18,7 @@ namespace UB.Model
     {
         private List<ChatMessage> messageQueue = new List<ChatMessage>();
         private object messageQueueLock = new object();
+        private object channelsLock = new object();
         private ISettingsDataService settingsDataService;
         private IGeneralDataService _dataService;
         private IDatabase _databaseService;
@@ -172,23 +173,38 @@ namespace UB.Model
                 chat.MessageReceived += chat_MessageReceived;
                 chat.AddChannel = (channel, fromChat) =>
                 {
-                    UI.Dispatch(() => ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL }));
+                    lock( channelsLock )
+                    {
+                        
+                            UI.Dispatch(() => {
+                                lock (channelsLock)
+                                {
+                                    if (!ChatChannels.Any(c => c.ChannelName == channel && c.ChatName == fromChat.ChatName))
+                                        ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL });
+                                }
+                            });
+                    }
                 };
                 chat.RemoveChannel = (channel, fromChat) =>
                 {
                     UI.Dispatch(() =>
                     {
-                        var searchItem = ChatChannels.FirstOrDefault(item => item.ChatName == fromChat.ChatName && item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
-                        if (searchItem != null)
-                            ChatChannels.Remove(searchItem);
-
-                        if (ChatChannels.Count <= 0)
+                        lock(channelsLock)
                         {
-                            if( !chat.Status.IsStopping )
+                            var searchItem = ChatChannels.FirstOrDefault(item => item.ChatName == fromChat.ChatName && item.ChannelName == channel && item.ChatIconURL == fromChat.IconURL);
+                            if (searchItem != null)
                             {
-                                chat.Status.IsConnected = false;
-                                chat.Status.IsLoggedIn = false;
-                                chat.Restart();
+                                ChatChannels.Remove(searchItem);
+                            }
+
+                            if (ChatChannels.Count <= 0)
+                            {
+                                if( !chat.Status.IsStopping )
+                                {
+                                    chat.Status.IsConnected = false;
+                                    chat.Status.IsLoggedIn = false;
+                                    chat.Restart();
+                                }
                             }
                         }
                     });

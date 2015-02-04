@@ -101,7 +101,7 @@
                                         <Border Grid.Row="1" Margin="0" Padding="0">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" MinWidth="16"/>
+                                                    <ColumnDefinition Width="50" MinWidth="16"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*" MinWidth="16"/>
                                                 </Grid.ColumnDefinitions>
