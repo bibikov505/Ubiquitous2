@@ -25,7 +25,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ListBox Margin="2" Background="{x:Null}" ItemsSource="{Binding Channels}" BorderBrush="{x:Null}">
+        <ListBox Margin="2" Background="{x:Null}" ItemsSource="{Binding Channels}" BorderBrush="{x:Null}" SelectedValue="{Binding ChatBox.ChannelFilter, Source={StaticResource Locator},Mode=OneWayToSource}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

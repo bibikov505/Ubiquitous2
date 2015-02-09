@@ -15,7 +15,7 @@ namespace UB.Model
         void StopAllChats();
         string GetRandomText();
         List<IChat> Chats { get;}
-        ObservableCollection<dynamic> ChatChannels { get; set; }
+        ObservableCollection<ChatChannel> ChatChannels { get; set; }
         void SendMessage(ChatMessage message);
         void Stop();
         void Start();

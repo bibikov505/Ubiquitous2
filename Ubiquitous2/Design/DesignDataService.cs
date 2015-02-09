@@ -9,7 +9,7 @@ namespace UB.Design
         private Random rnd;
         public DesignDataService()
         {
-            ChatChannels = new System.Collections.ObjectModel.ObservableCollection<dynamic>();
+            ChatChannels = new System.Collections.ObjectModel.ObservableCollection<ChatChannel>();
             rnd = new Random();
         }
 
@@ -62,7 +62,7 @@ namespace UB.Design
             throw new NotImplementedException();
         }
 
-        public System.Collections.ObjectModel.ObservableCollection<dynamic> ChatChannels
+        public System.Collections.ObjectModel.ObservableCollection<ChatChannel> ChatChannels
         {
             get;
             set;

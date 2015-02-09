@@ -3,6 +3,7 @@
                     xmlns:Custom="http://www.galasoft.ch/mvvmlight"
                     xmlns:Interactivity="clr-namespace:UB.Interactivity;assembly=Ubiquitous2"
                     xmlns:View="clr-namespace:UB.View;assembly=Ubiquitous2" 
+                    xmlns:Converter="clr-namespace:UB.Converter;assembly=Ubiquitous2"
                     xmlns:dc="clr-namespace:Devart.Controls"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -10,7 +11,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
-
+    <Converter:DoubleToGridLength x:Key="gridLengthConverter"/>
+    
     <Style x:Key="WindowBorder" TargetType="{x:Type Border}">
         <Setter Property="Panel.ZIndex" Value="-1"/>
         <Setter Property="Opacity" Value="0.01"/>
@@ -104,7 +106,20 @@
                                             </DockPanel>
                                         </Border>
                                         <Border Grid.Row="1" Margin="0" Padding="0">
-                                            <View:ChatBoxView Focusable="False" Grid.Row="1" OverridesDefaultStyle="True" Padding="0"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="{Binding AppConfig.ChatBoxChannelListWidth, Mode=TwoWay, Converter={StaticResource gridLengthConverter}}" MinWidth="16"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*" MinWidth="16"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border BorderThickness="1" BorderBrush="#FF323232" Grid.Column="0" Background="{x:Null}">
+                                                    <View:ChannelsSideTabsView Foreground="#FFCB972F" Background="{x:Null}"/>
+                                                </Border>
+                                                <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" Background="#01000000"/>
+                                                <Border BorderThickness="1" BorderBrush="#FF323232" Grid.Column="2">
+                                                    <View:ChatBoxView Focusable="False" OverridesDefaultStyle="True" Padding="0"/>
+                                                </Border>
+                                            </Grid>
                                         </Border>
                                         <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF1E1E1E" BorderThickness="1" Margin="0" Height="36">
                                             <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">

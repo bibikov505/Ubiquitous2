@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace UB.Model
@@ -12,6 +13,66 @@ namespace UB.Model
         public AppConfig()
         {
             Parameters = new List<ConfigField>();
+        }
+
+        /// <summary>
+        /// The <see cref="IsChatBoxChannelListEnabled" /> property's name.
+        /// </summary>
+        public const string IsChatBoxChannelListEnabledPropertyName = "IsChatBoxChannelListEnabled";
+
+        private bool _isChatBoxChannelListEnabled = true;
+
+        /// <summary>
+        /// Sets and gets the IsChatBoxChannelListEnabled property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsChatBoxChannelListEnabled
+        {
+            get
+            {
+                return _isChatBoxChannelListEnabled;
+            }
+
+            set
+            {
+                if (_isChatBoxChannelListEnabled == value)
+                {
+                    return;
+                }
+
+                _isChatBoxChannelListEnabled = value;
+                RaisePropertyChanged(IsChatBoxChannelListEnabledPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ChatBoxChannelListWidth" /> property's name.
+        /// </summary>
+        public const string ChatBoxChannelListWidthPropertyName = "ChatBoxChannelListWidth";
+
+        private double _chatBoxChannelListWidth = 50;
+
+        /// <summary>
+        /// Sets and gets the ChatBoxChannelListWidth property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public double ChatBoxChannelListWidth
+        {
+            get
+            {
+                return _chatBoxChannelListWidth;
+            }
+
+            set
+            {
+                if (_chatBoxChannelListWidth == value)
+                {
+                    return;
+                }
+
+                _chatBoxChannelListWidth = value;
+                RaisePropertyChanged(ChatBoxChannelListWidthPropertyName);
+            }
         }
 
         /// <summary>

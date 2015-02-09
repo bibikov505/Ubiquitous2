@@ -23,9 +23,9 @@ namespace UB.ViewModel
             _dataService = dataService;
             if( IsInDesignMode )
             {
-                Channels = new ObservableCollection<dynamic>()
+                Channels = new ObservableCollection<ChatChannel>()
                 {
-                   new { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon },
+                   new ChatChannel() { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon },
                 };
             }
             else
@@ -33,19 +33,47 @@ namespace UB.ViewModel
                 Channels = dataService.ChatChannels;
             }
         }
+        /// <summary>
+        /// The <see cref="App" /> property's name.
+        /// </summary>
+        public const string AppPropertyName = "App";
 
+        private App _app = null;
+
+        /// <summary>
+        /// Sets and gets the App property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public App App
+        {
+            get
+            {
+                return _app;
+            }
+
+            set
+            {
+                if (_app == value)
+                {
+                    return;
+                }
+
+                _app = value;
+                RaisePropertyChanged(AppPropertyName);
+            }
+        }
         /// <summary>
         /// The <see cref="Channels" /> property's name.
         /// </summary>
         public const string ChannelsPropertyName = "Channels";
 
-        private ObservableCollection<dynamic> _channels;
+        private ObservableCollection<ChatChannel> _channels;
 
         /// <summary>
         /// Sets and gets the Channels property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public ObservableCollection<dynamic> Channels
+        public ObservableCollection<ChatChannel> Channels
         {
             get
             {

@@ -15,6 +15,8 @@ using System.Threading;
 using Newtonsoft.Json;
 using GalaSoft.MvvmLight.Command;
 using System.Text.RegularExpressions;
+using System.Windows.Data;
+using System.ComponentModel;
 
 namespace UB.ViewModel
 {
@@ -75,6 +77,7 @@ namespace UB.ViewModel
             //        });
             //}
 
+            ChannelFilter.PropertyChanged += ChannelFilter_PropertyChanged;
 
             if (IsInDesignMode)
             {
@@ -213,6 +216,11 @@ namespace UB.ViewModel
                 }
             }
         }
+
+        void ChannelFilter_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            MessagesFiltered.Refresh();
+        }
         private void AddMessages(ChatMessage[] messages)
         {
             if( IsInDesignMode )
@@ -261,6 +269,37 @@ namespace UB.ViewModel
         }
 
         /// <summary>
+        /// The <see cref="ChannelFilter" /> property's name.
+        /// </summary>
+        public const string ChannelFilterPropertyName = "ChannelFilter";
+
+        private ChatChannel _channelFilter = new ChatChannel() { ChannelName = "#allchats" };
+
+        /// <summary>
+        /// Sets and gets the ChannelFilter property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ChatChannel ChannelFilter
+        {
+            get
+            {
+                return _channelFilter;
+            }
+
+            set
+            {
+                if (_channelFilter == value)
+                {
+                    return;
+                }
+
+                _channelFilter = value;
+                MessagesFiltered.Refresh();
+                RaisePropertyChanged(ChannelFilterPropertyName);
+            }
+        }
+
+        /// <summary>
         /// The <see cref="App" /> property's name.
         /// </summary>
         public const string AppPropertyName = "App";
@@ -287,6 +326,24 @@ namespace UB.ViewModel
 
                 _app = value;
                 RaisePropertyChanged(AppPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// Sets and gets the MessagesFiltered property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ICollectionView MessagesFiltered
+        {
+            get
+            {
+                var source = CollectionViewSource.GetDefaultView(Messages);
+                source.Filter = p => ChannelFilter == null ||
+                    ChannelFilter.ChannelName.Equals("#allchats", StringComparison.InvariantCultureIgnoreCase) || 
+                    ((p as ChatMessageViewModel).Message.Channel.Equals(ChannelFilter.ChannelName, StringComparison.InvariantCultureIgnoreCase) &&
+                    (p as ChatMessageViewModel).Message.ChatName.Equals(ChannelFilter.ChatName, StringComparison.InvariantCultureIgnoreCase)
+                    ) ;
+                return source;
             }
         }
 

@@ -457,13 +457,13 @@ namespace UB.ViewModel
         /// </summary>
         public const string ChatListPropertyName = "ChannelList";
 
-        private ObservableCollection<dynamic> _chatList = new ObservableCollection<dynamic>();
+        private ObservableCollection<ChatChannel> _chatList = new ObservableCollection<ChatChannel>();
 
         /// <summary>
         /// Sets and gets the ChatList property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public ObservableCollection<dynamic> ChannelList
+        public ObservableCollection<ChatChannel> ChannelList
         {
             get
             {

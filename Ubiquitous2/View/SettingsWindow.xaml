@@ -16,7 +16,7 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         Topmost="{Binding AppConfig.IsOnTop}"
-        Title="Ubiquitous2 Settings" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="504.596" MinHeight="250" WindowStartupLocation="Manual" Height="464.548">
+        Title="Ubiquitous2 Settings" Icon="..\ubiquitous smile.ico" MinWidth="400" Width="504.596" MinHeight="250" WindowStartupLocation="Manual" Height="495.548">
     <i:Interaction.Behaviors>
         <Interactivity:WindowPersistentLocationBehavior WindowName="SettingsWindow"/>
         <Interactivity:UnclosableWindow/>
@@ -29,7 +29,7 @@
         <Converter:StringToIsChecked x:Key="stringToIsCheckedConverter"/>
     </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="2" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chats">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"

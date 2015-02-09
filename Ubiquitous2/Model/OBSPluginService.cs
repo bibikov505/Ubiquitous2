@@ -42,7 +42,8 @@ namespace UB.Model
                         x = x < 0 ? 0 : x;
 
                         var y = (int)(double.IsNaN(app.ChatBoxY) ? 0 : app.ChatBoxY);
-                        var height = (int)System.Windows.Application.Current.MainWindow.Height - y;
+                        //var height = (int)System.Windows.Application.Current.MainWindow.Height - y;
+                        var height = (int)app.ChatBoxHeight > 0 ? (int)app.ChatBoxHeight : (int)System.Windows.Application.Current.MainWindow.Height - y;
                         var width = (int)app.ChatMessageWidth > 0 ? (int)(app.ChatMessageWidth + x - app.ChatBoxX) : (int)app.ChatBoxWidth;
                         
                         currentSize.Width = width;

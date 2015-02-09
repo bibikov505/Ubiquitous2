@@ -37,7 +37,7 @@ namespace UB
         public AppConfig AppConfig { get; set; }
 
         protected override void OnStartup(StartupEventArgs e)
-        {
+        {            
             NativeMethods.SetProcessDPIAware();
 
             Utils.Net.DemandTCPPermission();

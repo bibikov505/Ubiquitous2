@@ -46,8 +46,8 @@ namespace UB.Model
 
         public void Start()
         {
-            ChatChannels = new ObservableCollection<dynamic>();
-            ChatChannels.Add(new { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon });
+            ChatChannels = new ObservableCollection<ChatChannel>();
+            ChatChannels.Add(new ChatChannel() { ChatName = "AllChats", ChannelName = "#allchats", ChatIconURL = Icons.MainIcon });
 
             Task.Factory.StartNew(() => StartAllChats());
         }
@@ -180,7 +180,7 @@ namespace UB.Model
                                 lock (channelsLock)
                                 {
                                     if (!ChatChannels.Any(c => c.ChannelName == channel && c.ChatName == fromChat.ChatName))
-                                        ChatChannels.Add(new { ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL });
+                                        ChatChannels.Add(new ChatChannel(){ ChatName = fromChat.ChatName, ChannelName = channel, ChatIconURL = fromChat.IconURL });
                                 }
                             });
                     }
@@ -289,7 +289,7 @@ namespace UB.Model
         }
 
 
-        public ObservableCollection<dynamic> ChatChannels { get; set; }
+        public ObservableCollection<ChatChannel> ChatChannels { get; set; }
 
 
         public void SendMessage(ChatMessage message)
