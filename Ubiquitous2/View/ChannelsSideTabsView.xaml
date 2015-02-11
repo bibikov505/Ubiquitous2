@@ -30,7 +30,17 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <Image Width="16" Source="{Binding ChatIconURL}"/>
-                        <TextBlock  Text="{Binding ChannelName}" Margin="5,0,0,0" Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChannelsSideTabsView}}}" />
+                        <TextBlock  Text="{Binding ChannelName}" Margin="5,0,0,0" Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ChannelsSideTabsView}}}" >
+                            <TextBlock.ContextMenu>
+                                <ContextMenu Name="ChannelMenu" Style="{DynamicResource ContextMenuStyle}">
+                                    <MenuItem Header="Clear messages" Command="{Binding ChatBox.ClearMessages, Source={StaticResource Locator}}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                                        <!--<MenuItem.Icon>
+                                            <Image Width="16" Source="/Ubiquitous2;component/Resources/ignore.png" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        </MenuItem.Icon>-->
+                                    </MenuItem>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

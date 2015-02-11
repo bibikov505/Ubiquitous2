@@ -16,5 +16,15 @@ namespace Ubiquitous2Plugin
         {
             InitializeComponent();
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            uint i = 0;
+            if (!String.IsNullOrWhiteSpace(textBox1.Text) && !uint.TryParse(textBox1.Text, out i) )
+            {
+                MessageBox.Show("Enter Valid Number");
+                textBox1.Text = String.Empty;
+            }
+        }
     }
 }

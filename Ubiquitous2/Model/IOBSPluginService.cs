@@ -7,16 +7,25 @@ using System.ServiceModel;
 
 namespace UB.Model
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IOBSCallback))]
     public interface IOBSPluginService
     {
         [OperationContract]
         ImageData GetImage();
+        
         [OperationContract]
         ImageData GetFirstImage();
+        
         [OperationContract]
         void SetConfig(OBSPluginConfig config);
+        
         [OperationContract]
         OBSPluginConfig GetConfig();
+
+        [OperationContract]
+        bool Subscribe();
+
+        [OperationContract]
+        bool Unsubscribe();
     }
 }

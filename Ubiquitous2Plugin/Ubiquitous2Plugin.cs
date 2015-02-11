@@ -1,11 +1,7 @@
 ﻿using CLROBS;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -22,7 +18,7 @@ namespace Ubiquitous2Plugin
         public Ubiquitous2Plugin()
         {
             Name = "Ubiquitous2 chat";
-            Description = "Adds Ubiquitous2 chat as OBS source";
+            Description = "Adds Ubiquitous2 chat as OBS source.";
         }
 
         public static string AssemblyDirectory

@@ -624,6 +624,30 @@ namespace UB.ViewModel
                 MessengerInstance.Unregister<bool>(this, "EnableAutoScroll");
         }
 
+        private RelayCommand _clearMessages;
+
+        /// <summary>
+        /// Gets the ClearMessages.
+        /// </summary>
+        public RelayCommand ClearMessages
+        {
+            get
+            {
+                return _clearMessages
+                    ?? (_clearMessages = new RelayCommand(
+                    () =>
+                    {
+                        lock(lockReadMessages )
+                        {
+                            Messages.RemoveAll( m => ChannelFilter.ChannelName.Equals("#allchats",StringComparison.InvariantCultureIgnoreCase) ||
+                                (m.Message.Channel.Equals(ChannelFilter.ChannelName, StringComparison.InvariantCultureIgnoreCase) && 
+                                m.Message.ChatName.Equals(ChannelFilter.ChatName, StringComparison.InvariantCultureIgnoreCase))
+                                );
+
+                        }
+                    }));
+            }
+        }
 
         private RelayCommand<bool> _forceAutoScroll;
 

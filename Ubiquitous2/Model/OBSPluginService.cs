@@ -23,6 +23,7 @@ namespace UB.Model
         private static bool imageChanged = false;
         private static bool isConnected = false;
         private App app = (System.Windows.Application.Current as App);
+        private static readonly List<IOBSCallback> subscribers = new List<IOBSCallback>();
 
         [DataMember]
         private static RenderTargetBitmap renderTarget;
@@ -72,6 +73,56 @@ namespace UB.Model
 
             }
         }
+
+        public void OnImageChange()
+        {
+            try
+            {
+
+                subscribers.ForEach(delegate(IOBSCallback callback)
+                {
+                    if (((ICommunicationObject)callback).State == CommunicationState.Opened)
+                    {
+                        callback.OnImageChanged();
+                    }
+                    else
+                    {
+                        subscribers.Remove(callback);
+                    }
+                });
+            }
+            catch { }
+        }
+
+        public bool Subscribe()
+        {
+            try
+            {
+                IOBSCallback callback = OperationContext.Current.GetCallbackChannel<IOBSCallback>();
+                if (!subscribers.Contains(callback))
+                    subscribers.Add(callback);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Unsubscribe()
+        {
+            try
+            {
+                IOBSCallback callback = OperationContext.Current.GetCallbackChannel<IOBSCallback>();
+                if (subscribers.Contains(callback))
+                    subscribers.Remove(callback);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         [DataMember]
         public RenderTargetBitmap RenderTarget {
             get {
@@ -86,11 +137,18 @@ namespace UB.Model
                 lock (lockSave)
                 {
                     renderTarget = value;
-                    imageChanged = true;
+                    if( !imageChanged )
+                    {
+                        imageChanged = true;
+                        OnImageChange();
+                    }
                 }
             }
         
         }
+
+
+
         public bool IsConnected
         {
             get { return isConnected; } 

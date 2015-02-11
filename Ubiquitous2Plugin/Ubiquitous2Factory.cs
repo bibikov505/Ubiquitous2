@@ -1,16 +1,11 @@
 ﻿using CLROBS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Windows.Forms;
 using UB.Model;
 
 namespace Ubiquitous2Plugin
 {
-    internal class Ubiquitous2Factory : AbstractImageSourceFactory
+    public class Ubiquitous2Factory : AbstractImageSourceFactory
     {
         public Ubiquitous2Factory()
         {

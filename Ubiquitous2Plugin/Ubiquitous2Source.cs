@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CLROBS;
 using System.ServiceModel;
@@ -12,7 +9,8 @@ using System.Threading;
 
 namespace Ubiquitous2Plugin
 {
-    internal class Ubiquitous2Source : AbstractImageSource, IDisposable
+    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    public class Ubiquitous2Source : AbstractImageSource, IDisposable, IOBSCallback
     {
         private ChannelFactory<IOBSPluginService> pipeFactory;
         private Texture texture;
@@ -24,9 +22,20 @@ namespace Ubiquitous2Plugin
         private bool isConnecting = true;
         private bool isRendering = false;
         private XElement configElement;
-
+        private ulong transparency = 0xFF;
+        private Timer timerFadeOut;
         public Ubiquitous2Source(XElement configElement)        
         {
+            timerFadeOut = new Timer(delegate(object sender) {
+                ulong step = 3;
+                var obj = sender as Ubiquitous2Source;
+                if (obj.transparency >= step)
+                    obj.transparency -= step;
+                else
+                    obj.timerFadeOut.Change(Timeout.Infinite, Timeout.Infinite);
+
+            }, this, Timeout.Infinite, Timeout.Infinite);
+
             this.configElement = configElement;
             UpdateSettings();
             Task.Run(() => ConnectWCF());
@@ -38,6 +47,8 @@ namespace Ubiquitous2Plugin
             lock(imageLock)
                 imageData = null;
 
+            string lastConnectError = String.Empty;
+
             while( imageData == null && isRendering )
             {
                 Debug.Print("OBS plugin is trying to reconnect...");
@@ -46,12 +57,10 @@ namespace Ubiquitous2Plugin
                     if( pipeFactory == null )
                     {
                         pipeFactory =
-                            new ChannelFactory<IOBSPluginService>(
+                            new DuplexChannelFactory<IOBSPluginService>(this,
                             new NetNamedPipeBinding() { MaxReceivedMessageSize = 8294400 * 2, MaxBufferSize = 8294400 * 2 },
                             new EndpointAddress(
                             "net.pipe://localhost/ImageSource"));
-
-                      
                     }
 
                     if (pipeProxy == null)
@@ -61,7 +70,25 @@ namespace Ubiquitous2Plugin
 
                     if (pipeProxy != null)
                     {
+                        config.HideControls = Properties.Settings.Default.HideControls;
+                        
+                        uint timeout = 0;
+                        if (uint.TryParse(Properties.Settings.Default.FadeOutTimeout, out timeout))
+                            config.FadeOutTimeout = timeout;
+                        else
+                        {
+                            Properties.Settings.Default.FadeOutTimeout = "15";
+                            config.FadeOutTimeout = 15;
+                        }
+                        config.IsFadeOutEnabled = Properties.Settings.Default.IsFadeOutEnabled;
+
+                        Log.WriteInfo("Set config");
+                        pipeProxy.SetConfig(config);
+
                         Debug.Print("OBSPlugin: trying to get first image");
+
+                        pipeProxy.Subscribe();
+
                         lock(imageLock )
                             imageData = pipeProxy.GetFirstImage();
 
@@ -77,10 +104,6 @@ namespace Ubiquitous2Plugin
                         else
                         {
                             Log.WriteInfo("Got first image {0}x{1}", imageData.Size.Width, imageData.Size.Height);
-                            config.HideControls = Properties.Settings.Default.HideControls;
-                            Log.WriteInfo("Set config");
-                            pipeProxy.SetConfig(config);
-
                             Log.WriteInfo("Update settings");
                             UpdateSettings();
                             Log.WriteInfo("Update texture");
@@ -92,8 +115,13 @@ namespace Ubiquitous2Plugin
                     else
                         Debug.Print("OBSPlugin: pipe proxy is null");
                 }
-                catch
+                catch(Exception e)
                 {
+                    if( lastConnectError != e.Message )
+                    {
+                        Log.WriteError("OBS plugin connect error\n{0}\n{1}", e.Message, e.StackTrace);
+                        lastConnectError = e.Message;
+                    }
                     pipeProxy = null;         
                 }
 
@@ -102,6 +130,7 @@ namespace Ubiquitous2Plugin
             isConnecting = false;
 
         }
+
         public override void Render(float x, float y, float width, float height)
         {
             if (isConnecting)
@@ -117,11 +146,11 @@ namespace Ubiquitous2Plugin
             }
             if (texture != null)
                 lock (imageLock)
-                    GS.DrawSprite(texture, 0xFFFFFFFF, x, y, x + width, y + height);
+                    GS.DrawSprite(texture, 0x00FFFFFF + (uint)(transparency << 24), x, y, x + width, y + height);
         }
 
         public override void UpdateSettings()
-        {            
+        {
             if( imageData == null )
                 return;
 
@@ -217,7 +246,38 @@ namespace Ubiquitous2Plugin
 
         public void Dispose()
         {
-           
+            try
+            {
+                pipeProxy.Unsubscribe();
+                timerFadeOut.Change(Timeout.Infinite, Timeout.Infinite);
+                timerFadeOut.Dispose();
+            }
+            catch { }
+        }
+
+        public void OnImageChanged()
+        {
+            Log.WriteInfo("OBS image changed");
+            transparency = 0x0FF;
+            if( Properties.Settings.Default.IsFadeOutEnabled)
+            {
+                uint delay;
+                if (!uint.TryParse(Properties.Settings.Default.FadeOutTimeout, out delay))
+                    delay = 15;
+
+                timerFadeOut.Change(delay * 1000, 300 / 255);
+            }
+        }
+
+
+        public void OnConfigChanged()
+        {
+            Log.WriteInfo("OBS config changed");
+        }
+
+        public override void Preprocess()
+        {
+            base.Preprocess();
         }
     }
 }

@@ -243,6 +243,7 @@
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\ChatChannel.cs" />
     <Compile Include="Model\Chats\ConnectcastChat.cs" />
+    <Compile Include="Model\IOBSCallback.cs" />
     <Compile Include="Model\IScript.cs" />
     <Compile Include="Model\ChatChannelBase.cs" />
     <Compile Include="Model\ChannelStats.cs" />

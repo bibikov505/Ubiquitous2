@@ -51,23 +51,23 @@ namespace Ubiquitous2PluginInstaller
                 //x64    
                 {"CLRHost.Interop.dll", "x64.CLRHostPlugin.CLRHost.Interop.dll", @"64bit\plugins\CLRHostPlugin\"},
                 {"CLRHostPlugin.dll", "x64.CLRHostPlugin.dll", @"64bit\plugins\"},
-                {"Ubiquitous2Plugin.dll", "Ubiquitous2Plugin.dll", @"64bit\plugins\CLRHostPlugin\"},                
+                {"Ubiquitous2Plugin.dll", "x64.Ubiquitous2Plugin.dll", @"64bit\plugins\CLRHostPlugin\"},                
                 //x86
                 {"CLRHost.Interop.dll", "x86.CLRHostPlugin.CLRHost.Interop.dll", @"plugins\CLRHostPlugin\"},
                 {"CLRHostPlugin.dll", "x86.CLRHostPlugin.dll", @"plugins\"},
-                {"Ubiquitous2Plugin.dll", "Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},
+                {"Ubiquitous2Plugin.dll", "x86.Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},
             };
 
             var manualFiles64bit = new FileList() {
                 {"CLRHost.Interop.dll", "x64.CLRHostPlugin.CLRHost.Interop.dll", @"plugins\CLRHostPlugin\"},
                 {"CLRHostPlugin.dll", "x64.CLRHostPlugin.dll", @"plugins\"},
-                {"Ubiquitous2Plugin.dll", "Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},                
+                {"Ubiquitous2Plugin.dll", "x64.Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},                
             };
 
             var manualFiles32bit = new FileList() {
                 {"CLRHost.Interop.dll", "x86.CLRHostPlugin.CLRHost.Interop.dll", @"plugins\CLRHostPlugin\"},
                 {"CLRHostPlugin.dll", "x86.CLRHostPlugin.dll", @"plugins\"},
-                {"Ubiquitous2Plugin.dll", "Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},                
+                {"Ubiquitous2Plugin.dll", "x86.Ubiquitous2Plugin.dll", @"plugins\CLRHostPlugin\"},                
             };
 
 

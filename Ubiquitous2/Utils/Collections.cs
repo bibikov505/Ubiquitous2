@@ -17,8 +17,11 @@ namespace UB.Utils
             var removeItem = list.With(x => list)
                 .With(x => list.FirstOrDefault(match));
                 
-            if (removeItem != null)
+            while (removeItem != null)
+            {
                 list.Remove(removeItem);
+                removeItem = list.FirstOrDefault(match);
+            }
         }
 
     }
