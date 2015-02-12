@@ -25,7 +25,7 @@
 				<ControlTemplate TargetType="{x:Type UserControl}">
                     <ControlTemplate.Resources>
                         <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
-                            <Setter Property="TextDecorations" Value="None"/>
+                            <Setter Property="TextDecorations" Value="None  "/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Foreground" Value="#FFE4FF00"/>
@@ -69,7 +69,10 @@
                                 </TextBlock>
                                 <ub:ImageStack DataContext="{Binding Message.UserBadges}"/>
                                 <TextBlock FontSize="{Binding AppConfig.FontSizeMessage}" Text="{Binding Message.FromUserName}"  Cursor="Hand" ToolTip="Right click for options" Style="{StaticResource ResourceKey=NickStyle}" x:Name="nickTextBlock" VerticalAlignment="Top" Margin="0,0,-2,0" HorizontalAlignment="Right" FontFamily="/Ubiquitous2;component/Fonts/#Purista Medium">
-									<TextBlock.ContextMenu>
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding Command="{Binding UserNameLClick}" MouseAction="LeftClick" />
+                                    </TextBlock.InputBindings>
+                                    <TextBlock.ContextMenu>
 										<ContextMenu x:Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
 											<MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}"  CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalContentAlignment="Center" VerticalAlignment="Center">
 												<MenuItem.Icon>

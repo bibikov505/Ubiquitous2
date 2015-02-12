@@ -94,6 +94,16 @@ namespace UB.ViewModel
 
             });
 
+            MessengerInstance.Register<ChatMessage>(this, "SetReplyTo", (message) =>
+                {
+                    SelectedChatChannel = ChannelList.FirstOrDefault(channel =>
+                        channel.ChatName == message.ChatName &&
+                        channel.ChannelName == message.Channel) ?? ChannelList[0];
+                    ReplyCarretPos = 0;
+                    SendText = message.FromUserName + ", ";
+                    ReplyCarretPos = Int32.MaxValue;
+                });
+
             var steamChat = _dataService.GetChat(SettingsRegistry.ChatTitleSteam);
             if( steamChat != null )
             {
@@ -137,6 +147,36 @@ namespace UB.ViewModel
             if (args.Key == Key.RightCtrl || args.Key == Key.LeftCtrl)
             {
                 UI.Dispatch(() => EnableMouseTransparency = false);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="ReplyCarretPos" /> property's name.
+        /// </summary>
+        public const string ReplyCarretPosPropertyName = "ReplyCarretPos";
+
+        private int _replyCarretPos = 0;
+
+        /// <summary>
+        /// Sets and gets the ReplyCarretPos property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public int ReplyCarretPos
+        {
+            get
+            {
+                return _replyCarretPos;
+            }
+
+            set
+            {
+                if (_replyCarretPos == value)
+                {
+                    return;
+                }
+
+                _replyCarretPos = value;
+                RaisePropertyChanged(ReplyCarretPosPropertyName);
             }
         }
 

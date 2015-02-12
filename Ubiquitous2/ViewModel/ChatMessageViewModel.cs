@@ -173,6 +173,25 @@ namespace UB.ViewModel
             }
         }
 
+        private RelayCommand _userNameLClick;
+
+        /// <summary>
+        /// Gets the UserNameLClick.
+        /// </summary>
+        public RelayCommand UserNameLClick
+        {
+            get
+            {
+                return _userNameLClick
+                    ?? (_userNameLClick = new RelayCommand(
+                    () =>
+                    {
+                         MessengerInstance.Send<ChatMessage>(Message, "SetChannel");
+                         MessengerInstance.Send<ChatMessage>(Message, "SetReplyTo");
+                    }));
+            }
+        }
+
 
         private RelayCommand _setExpiration;
 

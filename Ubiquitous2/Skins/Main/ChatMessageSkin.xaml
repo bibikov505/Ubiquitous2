@@ -71,7 +71,10 @@
                                 </TextBlock>
                             <ub:ImageStack Margin="5,0,0,0" DataContext="{Binding Message.UserBadges}"/>
                             <TextBlock ToolTip="Right click for options" Cursor="Hand" Focusable="False" FontSize="{Binding AppConfig.FontSizeNickName}" Text="{Binding Message.FromUserName}" Margin="0,0,0,0" Foreground="#FFFFC042" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center" Padding="0">
-                                    <TextBlock.ContextMenu>
+                                <TextBlock.InputBindings>
+                                    <MouseBinding Command="{Binding UserNameLClick}" MouseAction="LeftClick" />
+                                </TextBlock.InputBindings>
+                                <TextBlock.ContextMenu>
                                         <ContextMenu Name="userNameMenu" Style="{DynamicResource ContextMenuStyle}">
                                             <MenuItem Header="Add to ignore list" Command="{Binding IgnoreUser}" CommandParameter="{Binding Message}" Foreground="#FFFFC042" VerticalAlignment="Center">
                                                 <MenuItem.Icon>

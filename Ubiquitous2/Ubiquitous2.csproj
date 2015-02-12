@@ -240,6 +240,7 @@
     <Compile Include="Interactivity\BehaviorBase.cs" />
     <Compile Include="Interactivity\ElementPositionTracker.cs" />
     <Compile Include="Interactivity\ElementToOBSPlugin.cs" />
+    <Compile Include="Interactivity\TextBoxAttached.cs" />
     <Compile Include="Interactivity\UnclosableWindow.cs" />
     <Compile Include="Model\ChatChannel.cs" />
     <Compile Include="Model\Chats\ConnectcastChat.cs" />
