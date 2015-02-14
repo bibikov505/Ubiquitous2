@@ -108,7 +108,7 @@ namespace UB.Model
 
             uint userId = 0;
 
-            if (!UInt32.TryParse(Re.GetSubString(content, @"userId.*?'(\d+)"), out userId))
+            if (!UInt32.TryParse(Re.GetSubString(content, @"userId.*?(\d+)"), out userId))
             {
                 IsAnonymous = true;
                 ResetAuthData();
@@ -527,6 +527,10 @@ namespace UB.Model
         private static void ChannelCountersHandler(GoodgameChannel channel, GoodGameData data)
         {
             //Log.WriteInfo("Goodgame counters. Clients: {0}, Users:{1}", data.ClientsInChannel, data.UsersInChannel);
+
+            channel.ChannelStats.ViewersCount = (int)data.ClientsInChannel;
+
+            channel.Chat.UpdateStats();
         }
         private static void MessageHandler(GoodgameChannel channel, GoodGameData data)
         {
@@ -576,10 +580,10 @@ namespace UB.Model
             var channelId = (Chat as GoodgameChat).GetChannelId(ChannelName);
             var counterPacket = new GoodgamePacket()
             {
-                Type = "getviewers",
+                Type = "get_channel_counters",
                 Data = new GoodGameData()
                 {
-                    Channel = channelId
+                    ChannelId = channelId
                 },
             };
             if (counterPacket != null && counterPacket.Data != null)
