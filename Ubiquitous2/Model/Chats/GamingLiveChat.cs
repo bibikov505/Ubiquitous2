@@ -41,6 +41,10 @@ namespace UB.Model
             };
 
             Games = new ObservableCollection<Game>();
+
+            GetGameList();
+
+
         }
 
         #region IChat
@@ -62,7 +66,6 @@ namespace UB.Model
                 Log.WriteInfo("Gaminglive authorization exception {0}", e.Message);
                 return false;
             }
-
             return true;
         }
         public bool LoginWithUsername()
@@ -232,14 +235,17 @@ namespace UB.Model
                     return;
             });
         }
-        public void SetTopic()
+        public bool SetTopic()
         {
             if (!Status.IsLoggedIn)
-                return;
+                return false;
+
+            if (jsonGames == null || jsonGames.games.Count <= 0)
+                jsonGames = JsonUtil.DeserializeUrl<GamingLiveGameList>(@"http://api.gaminglive.tv/games");
 
             var userName = Config.GetParameterValue("Username") as string;
             var authToken = Config.GetParameterValue("AuthToken") as string;
-            var gameId = this.With(x => jsonGames.games.FirstOrDefault(game => game.name.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase)))
+            var gameId = this.With(x => jsonGames.games.FirstOrDefault(game => game != null && game.name != null && game.name.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase)))
                             .With(x => x.id);
 
             var jsonInfo = new GamingLiveChannelUpdate
@@ -268,6 +274,21 @@ namespace UB.Model
                     });
                 }
             });
+
+            //Check if succeed
+            var currentInfo = GetLiveStreamInfo();
+
+            if (currentInfo == null)
+                return false;
+
+            if( Info.Topic.Equals( currentInfo["name"].ToObject<string>() ) &&
+                currentInfo["game"] != null &&
+                Info.CurrentGame.Name.Equals(currentInfo["game"]["name"].ToObject<string>()))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public Action StreamTopicAcquired

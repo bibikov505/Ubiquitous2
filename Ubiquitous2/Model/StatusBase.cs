@@ -25,10 +25,73 @@ namespace UB.Model
             IsStopping = false;
             IsStarting = false;
             IsConnecting = false;
+            IsChangingTopic = false;
+            IsChangingTopicSucceed = false;
+
         }
         private bool isInProgress
         {
             get { return IsStopping || IsStarting || IsConnecting; }
+        }
+
+        /// <summary>
+        /// The <see cref="IsChangingTopicSucceed" /> property's name.
+        /// </summary>
+        public const string IsChangingTopicSucceedPropertyName = "IsChangingTopicSucceed";
+
+        private bool _isChangingTopicSucceed = false;
+
+        /// <summary>
+        /// Sets and gets the IsChangingTopicSucceed property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsChangingTopicSucceed
+        {
+            get
+            {
+                return _isChangingTopicSucceed;
+            }
+
+            set
+            {
+                if (_isChangingTopicSucceed == value)
+                {
+                    return;
+                }
+
+                _isChangingTopicSucceed = value;
+                RaisePropertyChanged(IsChangingTopicSucceedPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="IsChangingTopic" /> property's name.
+        /// </summary>
+        public const string IsChangingTopicPropertyName = "IsChangingTopic";
+
+        private bool _isChangingTopic = false;
+
+        /// <summary>
+        /// Sets and gets the IsChangingTopic property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public bool IsChangingTopic
+        {
+            get
+            {
+                return _isChangingTopic;
+            }
+
+            set
+            {
+                if (_isChangingTopic == value)
+                {
+                    return;
+                }
+
+                _isChangingTopic = value;
+                RaisePropertyChanged(IsChangingTopicPropertyName);
+            }
         }
 
         /// <summary>

@@ -633,8 +633,8 @@ namespace UB.ViewModel
         {
             var delaySend = new Timer((obj) =>
             {
-                UI.Dispatch(() => MessengerInstance.Send<bool>(false, "MessageSent"));
-                UI.Dispatch(() => MessengerInstance.Send<bool>(true, "MessageSent"));
+                MessengerInstance.Send<bool>(false, "MessageSent");
+                MessengerInstance.Send<bool>(true, "MessageSent");
             }, this, 100, Timeout.Infinite);
 
         }

@@ -109,7 +109,7 @@ namespace UB.Model
             try
             {
                 if (!Login())
-                    IsAnonymous = true;
+                    IsAnonymous = true;                    
             }
             catch( Exception e)
             {

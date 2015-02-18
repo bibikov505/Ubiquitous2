@@ -14,7 +14,6 @@ using UB.Utils;
 
 namespace UB.Model
 {
-    //TODO: implement user list
     public class HitboxChat : ChatBase, IStreamTopic, IFollowersProvider, IChatUserList
     {
         private WebClientBase loginWebClient = new WebClientBase();
@@ -26,6 +25,7 @@ namespace UB.Model
 
         public HitboxChat(ChatConfig config) : base(config)
         {
+
             EmoticonUrl = "https://www.hitbox.tv/api/chat/icons/UnknownSoldier";
             EmoticonFallbackUrl = @"Content\hitboxemoticons.json";
 
@@ -238,9 +238,9 @@ namespace UB.Model
 
         private dynamic[] GetHitboxGameList(string partName, int count = 100)
         {
-            var url = "https://www.hitbox.tv/api/games?q={0}&limit={2}&_={1}";
+            var url = "https://www.hitbox.tv/api/games?q={0}&limit={1}";
 
-            return this.With(x => loginWebClient.Download(String.Format(url, HttpUtility.UrlEncode(partName), Time.UnixTimestamp(),count)))
+            return this.With(x => loginWebClient.Download(String.Format(url, HttpUtility.UrlEncode(partName),count)))
                 .With(x => JToken.Parse(x))
                 .With(x => x["categories"])
                 .With(x => x.ToArray<dynamic>());
@@ -325,10 +325,10 @@ namespace UB.Model
             
         }
 
-        public void SetTopic()
+        public bool SetTopic()
         {
             if (!Status.IsLoggedIn)
-                return;
+                return false;
 
             LoginWithUsername();
 
@@ -338,7 +338,7 @@ namespace UB.Model
                             .With(x => x[0]);
 
             if (livestream == null)
-                return;
+                return false;
 
             if( String.IsNullOrEmpty( livestream["media_recording"].ToObject<string>() ) )
             {
@@ -351,15 +351,15 @@ namespace UB.Model
                 .With(x => x[0]);
 
                 if (livestream == null)
-                    return;
+                    return false;
             }
 
             currentInfo["livestream"][0]["media_status"] = Info.Topic;
             
             if( !String.IsNullOrWhiteSpace( Info.CurrentGame.Name) )
             {
-                var gameList = GetHitboxGameList( Info.CurrentGame.Name, 1 );                    
-                if( gameList.Count() > 0 )
+                var gameList = GetHitboxGameList( Info.CurrentGame.Name, 1 );
+                if( gameList != null && gameList.Count() > 0 )
                 {
                     var game = gameList[0];
                     currentInfo["livestream"][0]["category_name"] = Info.CurrentGame.Name;
@@ -391,6 +391,29 @@ namespace UB.Model
                     loginWebClient.PutStream(String.Format(putUrl, HttpUtility.UrlEncode(userName.ToLower()), authToken), stream);
                 }
             });
+
+            //Check if succeed
+            var jsonInfo = GetLiveStreamInfo();
+
+            if (jsonInfo == null)
+                return false;
+
+            currentInfo = this.With(x => jsonInfo["livestream"].ToArray<JToken>())
+                .With(x => x.Count() <= 0 ? null : x[0].ToObject<JToken>());
+
+
+            if (currentInfo == null)
+                return false;
+
+
+            if (Info.Topic.Equals(currentInfo["media_status"].ToObject<string>()) &&
+                Info.CurrentGame.Name.Equals(currentInfo["category_name"].ToObject<string>()))
+            {
+                return true;
+            }
+
+            return false;
+
         }
 
         public Action StreamTopicAcquired
@@ -800,22 +823,6 @@ namespace UB.Model
 
                         lock (chatUsersLock)
                             (Chat as IChatUserList).ChatUsers.AddRange(newUserList);
-
-                        //foreach( ChatUser user in newUserList )
-                        //{
-                        //    UI.Dispatch(() =>
-                        //    {
-                        //        lock (chatUsersLock)
-                        //            (Chat as IChatUserList).ChatUsers.Add(new ChatUser()
-                        //            {
-                        //                Channel = ChannelName,
-                        //                ChatName = Chat.ChatName,
-                        //                GroupName = user.GroupName,
-                        //                NickName = user.NickName,
-                        //                Badges = null,
-                        //            });
-                        //    });
-                        //}
                         newUserList = null;
 
                     }

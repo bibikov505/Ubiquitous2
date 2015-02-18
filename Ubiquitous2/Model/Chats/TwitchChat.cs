@@ -352,27 +352,43 @@ namespace UB.Model
                     UI.Dispatch(() => StreamTopicAcquired());
             });
         }
-        public void SetTopic()
+        public bool SetTopic()
         {
 
             if (!Status.IsLoggedIn)
-                return;
+                return false;
 
-            Task.Factory.StartNew(() =>
+            var url = String.Format(@"http://www.twitch.tv/{0}/update", NickName);
+            var parameters = String.Format(@"status={0}&game={1}&broadcaster_language={2}", HttpUtility.UrlEncode(Info.Topic), HttpUtility.UrlEncode(Info.CurrentGame.Name), HttpUtility.UrlEncode(Info.Language));
+            var result = TwitchPost(url, parameters);
+
+            // Did you just login on Web and your session cookie is invalid now ? Okay, let's authenticate again...
+            if (!result.Contains(Info.Topic))
             {
-                var url = String.Format(@"http://www.twitch.tv/{0}/update", NickName);
-                var parameters = String.Format(@"status={0}&game={1}&broadcaster_language={2}", HttpUtility.UrlEncode(Info.Topic), HttpUtility.UrlEncode(Info.CurrentGame.Name), HttpUtility.UrlEncode(Info.Language));
-                var result = TwitchPost(url, parameters);
+                if (LoginWithUsername())
+                    result = TwitchPost(url, parameters);
+                else
+                    Log.WriteError("unable to set topic for Twitch.tv");
+            }
 
-                // Did you just login on Web and your session cookie is invalid now ? Okay, let's authenticate again...
-                if (!result.Contains(Info.Topic))
-                {
-                    if (LoginWithUsername())
-                        result = TwitchPost(url, parameters);
-                    else
-                        Log.WriteError("unable to set topic for Twitch.tv");
-                }
-            });
+            webClient.ContentType = ContentType.UrlEncodedUTF8;
+            var json = this.With(x => webClient.Download(String.Format("http://api.twitch.tv/api/channels/{0}/ember?on_site=1",
+                HttpUtility.UrlEncode(NickName))))
+                .With(x => !String.IsNullOrWhiteSpace(x) ? JToken.Parse(x) : null);
+
+            if (json == null || Info == null)
+                return false;
+
+            
+            if( Info.Topic.Equals(json["status"].ToObject<string>()) &&
+                Info.CurrentGame.Name.Equals(json["game"].ToObject<string>()))
+            {
+                return true;
+            }
+
+
+            return false;
+
         }
         public string SearchQuery
         {

@@ -1938,7 +1938,8 @@ namespace dotIRC
                         HandleClientDisconnected();
                         return;
                     }
-
+                    if ( this.receiveStream == null)
+                        return;
                     // Indicate that block of data has been read into receive buffer.
                     this.receiveStream.WritePosition += e.BytesTransferred;
                     if (this.dataStreamReader != null)

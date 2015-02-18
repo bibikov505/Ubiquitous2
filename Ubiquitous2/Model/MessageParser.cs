@@ -30,11 +30,16 @@ namespace UB.Model
             string removeAnchors = @"\[\/*[^\]]*\]";
             message.Text = Regex.Replace(message.Text, removeAnchors, "", RegexOptions.IgnoreCase);
         }
+        public static void GoodgameTrash(ChatMessage message, IChat chat)
+        {
+            message.Text = message.Text.Replace("\n", "");
+            message.Text = Regex.Replace(message.Text, @"\s+", " ");
+        }
         public static void UnescapeHtml(ChatMessage message, IChat chat)
         {
             message.Text = HttpUtility.HtmlDecode(message.Text);
         }
-        public static void ConvertToPlainText( ChatMessage message, IChat chat)
+        public static void ConvertToPlainText(ChatMessage message, IChat chat)
         {
             message.Text = HtmlToPlainText(message.Text);
         }

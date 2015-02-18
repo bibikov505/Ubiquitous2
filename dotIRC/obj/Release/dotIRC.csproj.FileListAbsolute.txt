@@ -41,3 +41,4 @@ C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.Properties.Res
 C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.csproj.GenerateResource.Cache
 C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.dll
 C:\Users\Anton\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.pdb
+C:\Users\meshkov\Source\Repos\Ubiquitous2\dotIRC\obj\Release\dotIRC.csprojResolveAssemblyReference.cache

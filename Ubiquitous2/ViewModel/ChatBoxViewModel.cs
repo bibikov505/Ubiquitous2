@@ -107,7 +107,7 @@ namespace UB.ViewModel
             MessengerInstance.Register<bool>(this, "MessageSent", msg =>
                 {
                     if (MessageSent != null)
-                        MessageSent(this, EventArgs.Empty);
+                        UI.Dispatch(()=> MessageSent(this, EventArgs.Empty));
                 });
 
             MessengerInstance.Register<bool>(this, "EnableAutoScroll", msg =>

@@ -94,13 +94,13 @@ namespace UB.Model
 
             Task.Factory.StartNew(() =>
             {
-                loginWebClient.ContentType = ContentType.UrlEncodedUTF8;
-                var content = loginWebClient.Download(String.Format(@"http://cybergame.tv/my_profile_edit/?rand={0}", Time.UnixTimestamp()));
+                var content = GetProfileData();
+                if (content == null)
+                    return;
+                
+
                 Info.Topic = Html.GetInnerText(@"//textarea[@name='channel_desc']", content);
                 Info.CurrentGame.Name = Html.GetSiblingInnerText(@"//select/option[@selected='selected']", content);
-                webGameList = Html.GetOptions(@"//select[@name='channel_game']/option", content);
-                webChannelId = Html.GetAttribute(@"//input[@name='channel']", "value", content);
-                profileFormParams = Html.FormParams(@"", content);
                 Info.CurrentGame.Id = webGameList.Where(v => v.Value.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase)).Select(g => g.Key).FirstOrDefault();
                 Info.CanBeRead = true;
                 Info.CanBeChanged = true;
@@ -109,11 +109,23 @@ namespace UB.Model
                     UI.Dispatch(() => StreamTopicAcquired());
             });
         }
-
-        public void SetTopic()
+        private string GetProfileData()
         {
+            loginWebClient.ContentType = ContentType.UrlEncodedUTF8;
+            var content = loginWebClient.Download(String.Format(@"http://cybergame.tv/my_profile_edit/?rand={0}", Time.UnixTimestamp()));
+            webGameList = Html.GetOptions(@"//select[@name='channel_game']/option", content);
+            webChannelId = Html.GetAttribute(@"//input[@name='channel']", "value", content);
+            profileFormParams = Html.FormParams(@"", content);
+
+            return content;
+
+        }
+        public bool SetTopic()
+        {
+            GetProfileData();
+
             if (profileFormParams == null || !Status.IsLoggedIn)
-                return;
+                return false;
 
             String param = "a=save_profile&channel_game={0}&channel_desc={1}&channel={2}&display_name={3}&channel_name={4}";
             var displayName = profileFormParams.Where(k => k.Key.StartsWith("display_name_", StringComparison.CurrentCultureIgnoreCase)).Select(v => v.Value).FirstOrDefault();
@@ -128,6 +140,24 @@ namespace UB.Model
 
             loginWebClient.Upload(String.Format(@"http://cybergame.tv/my_profile_edit/?mode=async&rand={0}", Time.UnixTimestamp()),
                 String.Format(param, Info.CurrentGame.Id, HttpUtility.UrlEncode(Info.Topic), webChannelId, HttpUtility.UrlEncode(displayName), HttpUtility.UrlEncode(channelName)));
+
+
+            var content = loginWebClient.Download(String.Format(@"http://cybergame.tv/my_profile_edit/?rand={0}", Time.UnixTimestamp()));
+            Info.Topic = Html.GetInnerText(@"//textarea[@name='channel_desc']", content);
+            Info.CurrentGame.Name = Html.GetSiblingInnerText(@"//select/option[@selected='selected']", content);
+
+
+            loginWebClient.ContentType = ContentType.UrlEncodedUTF8;
+            
+            content = loginWebClient.Download(String.Format(@"http://cybergame.tv/my_profile_edit/?rand={0}", Time.UnixTimestamp()));
+            if (Info.Topic.Equals(Html.GetInnerText(@"//textarea[@name='channel_desc']", content)) &&
+                Info.CurrentGame.Name.Equals(Html.GetSiblingInnerText(@"//select/option[@selected='selected']", content)))
+            {
+                return true;
+            }
+            
+            return false;
+
         }
 
         public Action StreamTopicAcquired

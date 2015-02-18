@@ -185,6 +185,7 @@ namespace UB.ViewModel
                                           {
                                               StreamTopics.Clear();
                                               _streamDataService.LoadTopicsFromWeb();
+
                                               InitializeTopicSections();
                                           }));
             }
@@ -237,6 +238,7 @@ namespace UB.ViewModel
                                                           linkedSettings.StreamTopics.Add(newInfo);
                                                       }
                                                       stream.Info = newInfo;
+                                                      (stream as IChat).Status.IsChangingTopicSucceed = false;
                                                   });
                                               });
                                               InitializeTopicSections();
@@ -295,7 +297,14 @@ namespace UB.ViewModel
                     ?? (_updateWeb = new RelayCommand(
                                           () =>
                                           {
-                                              _streamDataService.UpdateTopicsOnWeb();
+                                              _streamDataService.GetStreamTopics((streams) =>
+                                              {
+                                                  foreach (var stream in streams)
+                                                  {
+                                                      (stream as IChat).Status.IsChangingTopicSucceed = false;
+                                                  }
+                                              });
+                                              Task.Factory.StartNew( ()=> _streamDataService.UpdateTopicsOnWeb());
                                           }));
             }
         }

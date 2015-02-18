@@ -35,9 +35,39 @@ namespace UB.ViewModel
             _streamTopic = streamTopic;
             StreamInfo = _streamTopic.Info;
             ChannelIcon = (streamTopic as IChat).IconURL;
+            Status = (streamTopic as IChat).Status;
             EnableGameSuggestion = true;
         }
 
+        /// <summary>
+        /// The <see cref="Status" /> property's name.
+        /// </summary>
+        public const string StatusPropertyName = "Status";
+
+        private StatusBase _status = new StatusBase();
+
+        /// <summary>
+        /// Sets and gets the Status property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public StatusBase Status
+        {
+            get
+            {
+                return _status;
+            }
+
+            set
+            {
+                if (_status == value)
+                {
+                    return;
+                }
+
+                _status = value;
+                RaisePropertyChanged(StatusPropertyName);
+            }
+        }
 
         /// <summary>
         /// The <see cref="EnableGameSuggestion" /> property's name.

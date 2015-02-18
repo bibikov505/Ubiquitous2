@@ -9,13 +9,29 @@
              DataContext="{Binding}"    
              d:DesignHeight="300" d:DesignWidth="364.179">
 
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="normalBg" StartPoint="0,100" EndPoint="354,100" MappingMode="Absolute">
+            <GradientStop Color="#FF3F3F46" Offset="0.066"/>
+            <GradientStop Color="#FFFFE691" Offset="0.1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="successBg" StartPoint="0,100" EndPoint="354,100" MappingMode="Absolute">
+            <GradientStop Color="#FF123812" Offset="0.066"/>
+            <GradientStop Color="#FFB2F5B8" Offset="0.1"/>
+        </LinearGradientBrush>
+    </UserControl.Resources>
     <Grid Visibility="{Binding StreamInfo.CanBeChanged, Converter={StaticResource boolToVisibilityConverter}}" Margin="5" VerticalAlignment="Top">
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,100" EndPoint="354,100" MappingMode="Absolute">
-                <GradientStop Color="#FF3F3F46" Offset="0.066"/>
-                <GradientStop Color="#FFFFE691" Offset="0.1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+        <Grid.Style>
+            <Style TargetType="Grid">                
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Status.IsChangingTopicSucceed}" Value="True">
+                        <Setter Property="Background" Value="{StaticResource successBg}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Status.IsChangingTopicSucceed}" Value="False">
+                        <Setter Property="Background" Value="{StaticResource normalBg}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
         <Border Padding="0" BorderBrush="#FF5F5F5F" BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>

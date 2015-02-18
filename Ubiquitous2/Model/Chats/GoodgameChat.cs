@@ -31,11 +31,12 @@ namespace UB.Model
         public GoodgameChat(ChatConfig config)
             : base(config)
         {
-            EmoticonUrl = @"http://goodgame.ru/css/compiled/chat.css";
+            EmoticonUrl = @"http://goodgame.ru/css/compiled/smiles.css";
             EmoticonFallbackUrl = @"Content\goodgame_smiles.css";
 
             CreateChannel = () => { return new GoodgameChannel(this); };
 
+            ContentParsers.Add(MessageParser.GoodgameTrash);
             ContentParsers.Add(MessageParser.ConvertToPlainText);
             ContentParsers.Add(MessageParser.ParseURLs);
             ContentParsers.Add(MessageParser.ParseEmoticons);
@@ -198,7 +199,7 @@ namespace UB.Model
                     if (content == null)
                         return;
 
-                    MatchCollection matches = Regex.Matches(content, @"}[^\.]*\.smile-([^-|\s]*)\s*{(.*?)}", RegexOptions.IgnoreCase);
+                    MatchCollection matches = Regex.Matches(content, @"\.smiles\.([^-|\s]*)\s*{(.*?)}", RegexOptions.IgnoreCase);
 
                     if (matches.Count <= 0)
                     {
@@ -385,10 +386,10 @@ namespace UB.Model
             });
         }
 
-        public void SetTopic()
+        public bool SetTopic()
         {
             if (string.IsNullOrWhiteSpace(ownChannelId) || !Status.IsLoggedIn)
-                return;
+                return false;
 
             var searchGame = Games.FirstOrDefault(game => game.Name.Equals(Info.CurrentGame.Name, StringComparison.InvariantCultureIgnoreCase));
             if (searchGame == null)
@@ -404,6 +405,21 @@ namespace UB.Model
             webClient.ContentType = ContentType.UrlEncoded;
             webClient.Headers["X-Requested-With"] = "XMLHttpRequest";
             webClient.Upload("http://goodgame.ru/ajax/channel/update_title/", parameters);
+
+            //Check if succeed
+            var content = GoodgameGet(String.Format(@"http://goodgame.ru/channel/{0}", ownChannel));
+            if (!String.IsNullOrWhiteSpace(content))
+            {
+                if( Info.Topic.Equals( Re.GetSubString(content, @"<title>([^<]*)</title>")) &&
+                    Info.CurrentGame.Name.Equals( this.With(x => Re.GetSubString(content, @"StreamTitleEdit[^,]*,[^,]*,[^,]*,[^,]*,[^']*'([^']*)'"))
+                    .With(x => x.Trim())))
+                {
+                    return true;
+                }
+            }
+
+            
+            return false;
         }
 
         public Action StreamTopicAcquired
