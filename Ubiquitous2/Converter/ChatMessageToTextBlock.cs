@@ -106,6 +106,13 @@ namespace UB.Converter
                 var htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(message.Text);
                 var nodes = htmlDoc.DocumentNode.ChildNodes.ToList();
+                if (nodes.Count == 0)
+                {
+                    textBlock.Inlines.Add(new Run(message.Text));
+                    htmlDoc = null;
+                    return textBlock.Inlines;
+                }
+
                 foreach (var node in nodes)
                 {
                     switch (node.NodeType)
