@@ -12,6 +12,30 @@
     
     <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"></BooleanToVisibilityConverter>
     <Converter:DoubleToGridLength x:Key="gridLengthConverter"/>
+    <Style x:Key="OpacityBorder" TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <SolidColorBrush Color="#FF165B1D" Opacity="{Binding Main.AppConfig.BackgroundOpacity, Source={StaticResource Locator}}"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsOverlayVisible}" Value="True">
+                <Setter Property="Border.BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="#FF165B1D" Opacity="{Binding Main.AppConfig.BackgroundOpacity, Source={StaticResource Locator}}"/>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsOverlayVisible}" Value="False">
+                <Setter Property="Border.BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="#FF165B1D" Opacity="0"/>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+        </Style.Triggers>
+    </Style>
     <Style x:Key="TopBarIcon" TargetType="{x:Type Image}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -58,12 +82,17 @@
                         </Grid.ColumnDefinitions>
                         <Rectangle Fill="#FF1E1E1E" Panel.ZIndex="-10" Opacity="{Binding AppConfig.BackgroundOpacity}" Grid.RowSpan="3" Grid.ColumnSpan="3" />
                         <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="5">
-                            <Border Panel.ZIndex="-5" Background="#01FFFFFF" CornerRadius="10,10,10,10" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0">
+                            <Border Panel.ZIndex="-5" Background="#01FFFFFF" CornerRadius="10,10,10,10" BorderThickness="1" Margin="0">
                                 <Border.Style>
                                     <Style>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsOverlayVisible}" Value="True">
                                                 <Setter Property="Border.Visibility" Value="Visible"/>
+                                                <Setter Property="Border.BorderBrush">
+                                                    <Setter.Value>
+                                                        <SolidColorBrush Color="#FF165B1D" Opacity="{Binding Main.AppConfig.BackgroundOpacity, Source={StaticResource Locator}}"/>
+                                                    </Setter.Value>
+                                                </Setter>
                                             </DataTrigger>
 
                                             <DataTrigger Binding="{Binding IsOverlayVisible}" Value="False">
@@ -73,7 +102,6 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>
-
                             </Border>
                             <DockPanel Focusable="False" d:DesignHeight="300" d:DesignWidth="500">
                                 <Grid Focusable="False">
@@ -127,22 +155,20 @@
                                         </DockPanel>
                                     </Border>
                                     <Border Grid.Row="1" Margin="0" Padding="0">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="{Binding AppConfig.ChatBoxChannelListWidth, Mode=TwoWay, Converter={StaticResource gridLengthConverter}}" MinWidth="16"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*" MinWidth="16"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Border BorderThickness="1" BorderBrush="#FF323232" Grid.Column="0" Background="{x:Null}">
-                                                <View:ChannelsSideTabsView Foreground="#FFCB972F" Background="{x:Null}"/>
-                                            </Border>
-                                            <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" Background="#01000000"/>
-                                            <Border BorderThickness="1" BorderBrush="#FF323232" Grid.Column="2">
-                                                <View:ChatBoxView Focusable="False" OverridesDefaultStyle="True" Padding="0"/>
-                                            </Border>
-                                        </Grid>
+                                        <View:SplitChatBoxView LeftColumnWidth="{Binding Main.AppConfig.ChatBoxChannelListWidth, Mode=TwoWay, Source={StaticResource Locator}}" IsLeftColumnVisible="{Binding Main.AppConfig.IsChannelListVisible, Source={StaticResource Locator}}">
+                                            <View:SplitChatBoxView.LeftContent>
+                                                <Border Style="{DynamicResource OpacityBorder}" BorderThickness="0,0,1,0" Background="Transparent">
+                                                    <View:ChannelsSideTabsView Foreground="#FFCB972F" Background="Transparent"/>
+                                                </Border>
+                                            </View:SplitChatBoxView.LeftContent>
+                                            <View:SplitChatBoxView.RightContent>
+                                                <Border BorderThickness="1,0,0,0" Style="{DynamicResource OpacityBorder}" Margin="0" Padding="1,0">
+                                                    <View:ChatBoxView Focusable="False" OverridesDefaultStyle="True" Padding="0"/>
+                                                </Border>
+                                            </View:SplitChatBoxView.RightContent>
+                                        </View:SplitChatBoxView>
                                     </Border>
-                                    <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="#FF165B1D" BorderThickness="1" Margin="0" Height="36">
+                                    <Border CornerRadius="0,0,10,10" Focusable="False" Grid.Row="2" Padding="24,0,5,0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Panel.ZIndex="1" Visibility="{Binding IsOverlayVisible, Converter={StaticResource boolToVisibilityConverter}}" Style="{DynamicResource OpacityBorder}" BorderThickness="1" Margin="0" Height="36">
                                         <DockPanel Focusable="False" VerticalAlignment="Bottom" Background="Transparent" Margin="0">
                                             <ComboBox Focusable="False" Style="{DynamicResource ReplyComboStyle}" Name="replyCombo" ItemsSource="{Binding ChannelList}" SelectedItem="{Binding SelectedChatChannel}" ItemTemplate="{DynamicResource ReplyComboTemplate}" IsReadOnly="True" IsEditable="False" Margin="-18,1,61,6" VerticalAlignment="Stretch"/>
                                             <Border Focusable="False" CornerRadius="7" Background="#FF303030" Padding="6,0" Margin="-55,-24,1,-19" Height="22">

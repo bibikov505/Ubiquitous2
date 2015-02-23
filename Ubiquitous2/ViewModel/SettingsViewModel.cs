@@ -12,6 +12,7 @@ using UB.Properties;
 using UB.Utils;
 using UB.View;
 using System.Linq;
+using System.Windows.Media;
 
 namespace UB.ViewModel
 {
@@ -48,6 +49,26 @@ namespace UB.ViewModel
             var currentTheme = ThemeList.FirstOrDefault(theme => theme.Title.Equals(Theme.CurrentTheme));
             if (currentTheme != null)
                 currentTheme.IsCurrent = true;
+        }
+
+        private RelayCommand _testSoundCommand;
+
+        /// <summary>
+        /// Gets the TestSoundCommand.
+        /// </summary>
+        public RelayCommand TestSoundCommand
+        {
+            get
+            {
+                return _testSoundCommand
+                    ?? (_testSoundCommand = new RelayCommand(
+                    () =>
+                    {
+                        var testPlayer = new MediaPlayer();
+
+                        System.Media.SystemSounds.Exclamation.Play();
+                    }));
+            }
         }
 
         /// <summary>

@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="UB.View.SplitChatBoxView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:Interactivity="clr-namespace:UB.Interactivity"
+        xmlns:Converter="clr-namespace:UB.Converter"
+        mc:Ignorable="d ignore">
+
+    <UserControl.Resources>
+        <Converter:DoubleToGridLength x:Key="gridLengthConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Name="leftColumnDefinition" Width="{Binding LeftColumnWidthTemp, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource gridLengthConverter}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinWidth="16"/>
+            <ColumnDefinition Name="middleColumnDefinition" Width="Auto"/>
+            <ColumnDefinition Name="rightColumnDefinition" Width="*" MinWidth="16"/>
+        </Grid.ColumnDefinitions>
+        <ContentPresenter Grid.Column="0" Name="leftContent"/>
+        <GridSplitter Grid.Column="1" Name="splitter" Width="3" ResizeBehavior="PreviousAndNext" Background="#01000000" DragIncrement="1" ResizeDirection="Columns"/>
+        <ContentPresenter Grid.Column="2" Name="rightContent"/>
+    </Grid>
+</UserControl>

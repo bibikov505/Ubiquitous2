@@ -49,11 +49,9 @@ namespace UB.Utils
             {
                 Items.Add(item);
             }
-            UI.Dispatch(() => {
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));            
-            });
+            UI.Dispatch(() => this.OnPropertyChanged(new PropertyChangedEventArgs("Count")));
+            UI.Dispatch(() => this.OnPropertyChanged(new PropertyChangedEventArgs("Item[]")));
+            UI.Dispatch(() => this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));            
         }
 
         public void Reset(IEnumerable<T> range)

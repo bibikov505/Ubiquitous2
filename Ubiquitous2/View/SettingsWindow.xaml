@@ -29,7 +29,7 @@
         <Converter:StringToIsChecked x:Key="stringToIsCheckedConverter"/>
     </Window.Resources>
     <Grid>
-        <fluent:BackstageTabControl SelectedIndex="0" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
+        <fluent:BackstageTabControl SelectedIndex="3" Background="#FF323232" Style="{DynamicResource SettingsStyle}">
             <fluent:BackstageTabItem Header="Chats">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Chats}"
@@ -132,35 +132,65 @@
 
 
 
-                <!--<ScrollViewer Template="{DynamicResource ScrollStyle}">
-                    <VirtualizingStackPanel Orientation="Vertical">
-                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Main" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Main}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
-                            <Grid>
-                                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left">Main</TextBlock>
-                                <Image Width="150" Source="/Ubiquitous2;component/Resources/MainThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
-                            </Grid>
+            </fluent:BackstageTabItem>
+            <fluent:BackstageTabItem Header="Sounds">
+                <Grid Margin="10,10,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" >
+                        <Label Width="50" VerticalAlignment="Center">Volume</Label>
+                        <Slider Width="100" Name="sliderVolume" Maximum="100" TickFrequency="10" SmallChange="1" TickPlacement="BottomRight" VerticalAlignment="Center" BorderThickness="10,0,0,0" />
+                        <TextBlock Width="10" Text="{Binding ElementName=sliderVolume, Path=Value}" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,10,0">%</TextBlock>
+                        <Button Command="{Binding TestSoundCommand}" Content="Test" Width="75" Height="22" VerticalAlignment="Center"/>
+                    </StackPanel>
 
-                        </RadioButton>
-                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Simple" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Simple}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
-                            <Grid>
-                                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left">Simple</TextBlock>
-                                <Image Width="150" Source="/Ubiquitous2;component/Resources/SimpleThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
-                            </Grid>
-                        </RadioButton>
-                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="StarCitizen" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=StarCitizen}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
-                            <Grid>
-                                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left">Star Citizen</TextBlock>
-                                <Image Width="150" Source="/Ubiquitous2;component/Resources/StarCitizenThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
-                            </Grid>
-                        </RadioButton>
-                        <RadioButton Command="{Binding SelectTheme}" CommandParameter="Battlefield" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding CurrentTheme, Converter={StaticResource stringToIsCheckedConverter}, ConverterParameter=Battlefield}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
-                            <Grid>
-                                <TextBlock VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left">Battlefield</TextBlock>
-                                <Image Width="150" Source="/Ubiquitous2;component/Resources/BattlefieldThemeThumbnail.png" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
-                            </Grid>
-                        </RadioButton>
-                    </VirtualizingStackPanel>
-                </ScrollViewer>-->
+                    <ItemsControl Focusable="False" 
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                              ScrollViewer.CanContentScroll="True"
+                              VirtualizingPanel.ScrollUnit="Pixel"
+                              ItemsSource="{Binding ThemeList}" Grid.ColumnSpan="2" Margin="0,0,0,57">
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer 
+                                Template="{DynamicResource ScrollStyle}"
+                                VirtualizingPanel.ScrollUnit="Pixel"
+                                CanContentScroll="True">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Command="{Binding Settings.SelectTheme, Mode=OneWay, Source={StaticResource Locator}}" CommandParameter="{Binding Title}" Style="{DynamicResource ThemeRadioButton}" GroupName="ThemeButtons" IsChecked="{Binding IsCurrent}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                                    <Grid>
+                                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Left"/>
+                                        <Image Width="150" ToolTip="{Binding Title}" Source="{Binding Thumbnail}" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                            <Image.CacheMode>
+                                                <BitmapCache/>
+                                            </Image.CacheMode>
+                                        </Image>
+                                    </Grid>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel 
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.ScrollUnit="Pixel" 
+                                Orientation="Vertical">
+                                </VirtualizingStackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
+
+
+
             </fluent:BackstageTabItem>
             <fluent:BackstageTabItem Header="Personalization">
                 <Grid Margin="10">
@@ -189,6 +219,7 @@
                             <CheckBox IsChecked="{Binding AppConfig.IsReplyBoxPersistent, Mode=TwoWay}" Content="Reply box is always visible" FontWeight="Bold"/>
                             <CheckBox IsChecked="{Binding AppConfig.IsShortURLEnabled, Mode=TwoWay}" Content="Shorten URLs with tinyurl" FontWeight="Bold"/>
                             <CheckBox IsChecked="{Binding AppConfig.IsUserListVisible, Mode=TwoWay}" Content="Show user list window" FontWeight="Bold"/>
+                            <CheckBox IsChecked="{Binding AppConfig.IsChannelListVisible, Mode=TwoWay}" Content="Show channel list in main window" FontWeight="Bold"/>
                             <GroupBox Header="Background opacity control" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,0">
                                 <StackPanel Margin="7,13,0,0">
                                     <StackPanel Orientation="Horizontal" Margin="0,-9,0,0">
@@ -271,6 +302,9 @@
                     </ScrollViewer>
                 </Grid>
             </fluent:BackstageTabItem>
+
+
+
         </fluent:BackstageTabControl>
     </Grid>
 </Window>

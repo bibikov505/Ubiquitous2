@@ -10,7 +10,7 @@ using System.Windows.Interactivity;
 
 namespace UB.Interactivity
 {
-    public class DragThumb :Behavior<UIElement>
+    public class DragThumb : Behavior<UIElement>
     {
         private Window window;
         protected override void OnAttached()
@@ -25,13 +25,13 @@ namespace UB.Interactivity
                 return;
             if (e.ClickCount > 1)
                 SwitchWindowSize();
-            else if (e.ClickCount == 1)
+            else if (e.ClickCount == 1 && e.LeftButton != System.Windows.Input.MouseButtonState.Released)
                 StartDrag();
         }
 
         protected override void OnDetaching()
         {
-            AssociatedObject.MouseDown -= AssociatedObject_MouseDown;        
+            AssociatedObject.MouseDown -= AssociatedObject_MouseDown;
         }
 
         private void SwitchWindowSize()
@@ -46,7 +46,8 @@ namespace UB.Interactivity
             if (window == null)
                 return;
 
-            window.DragMove();
+            try { window.DragMove(); }
+            catch { }
         }
     }
 }
